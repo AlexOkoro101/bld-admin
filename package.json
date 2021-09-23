@@ -5,10 +5,6 @@
         "name": "Buylike admin"
     },
     "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/salvia-kit/dashboard-v4-nextjs.git"
-    },
     "keywords": [
         "ui",
         "react",
