@@ -20,7 +20,7 @@ const data = [
   {
     title: 'Auctions',
     icon: <ArchivesIcon />,
-    link: '/admin/archives',
+    link: '/admin/auctions',
   },
   {
     title: 'Members',
