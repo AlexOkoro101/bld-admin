@@ -5,6 +5,7 @@ import {
   GET_COLLECTION_SUCCESS,
   GET_COLLECTION_FAILED,
   GET_COLLECTION,
+  GET_COLLECTION_DETAIL,
 } from '../types';
 //
 //
@@ -43,5 +44,12 @@ export const getCollections = () => (dispatch) => {
 export const logOut = () => (dispatch) => {
   dispatch({
     type: GET_COLLECTION_FAILED,
+  });
+};
+
+export const getCollectionDetail = (collection) => (dispatch) => {
+  dispatch({
+    type: GET_COLLECTION_DETAIL,
+    payload: collection,
   });
 };

@@ -1,5 +1,5 @@
 import Content from '../src/components/content';
 
 export default function HomePage() {
-  return <Content title="Dashboard" />;
+  return <h1>bhcccj</h1>;
 }

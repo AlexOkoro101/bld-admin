@@ -1,6 +1,13 @@
 import React from 'react';
+import { CustomButton } from '../utils/Button';
+import { useRouter } from 'next/router';
+import { getCollectionDetail } from '../../../redux/actions/collection';
+import { useDispatch } from 'react-redux';
 
 export const CollectionCard = ({ filteredData }) => {
+  //
+  const router = useRouter();
+  const dispatch = useDispatch();
   //
   function displaySmall(item) {
     let data = item.vehicles.slice(0, 5);
@@ -40,10 +47,18 @@ export const CollectionCard = ({ filteredData }) => {
         filteredData.map((ele, id) => (
           <div key={id} className="bg-white border p-4 rounded my-3">
             <div className="flex justify-between items-center">
-              <h3 className="text-letters">{ele.name}</h3>
+              <CustomButton
+                title={ele.name}
+                onClick={() =>
+                  router.push(
+                    { pathname: '/admin/auctions/' + ele.name },
+                    dispatch(getCollectionDetail(ele)),
+                  )
+                }
+              />
               <h3 className="text-letters">$15,000 - $30,500</h3>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between mt-1 items-center">
               <p className="text-letters text-xs">
                 {`${ele.vehicles.length} car${
                   ele.vehicles.length > 1 ? 's' : ''
