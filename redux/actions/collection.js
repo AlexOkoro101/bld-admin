@@ -23,7 +23,6 @@ export const getCollections = () => (dispatch) => {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
     },
-    mode: 'no-cors',
   })
     .then(function (response) {
       return response.json();

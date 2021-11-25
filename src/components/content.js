@@ -7,7 +7,7 @@ import ContentSideComponent from './ContentSideComponent';
 const Content = () => {
   return (
     <div className="flex w-full h-full md:pt-4 md:pl-20 p-4 bg-customBg gap-4   font-montserrat  flex-wrap">
-      <div className="w-full lg:w-8/12 overflow-auto h-full   text-letters md:pt-5 md:pb-24  ">
+      <div className="w-full lg:w-9/12 overflow-auto h-full   text-letters md:pt-5 md:pb-24  ">
         {/* <Tabs>
           <TabList className="transition-all delay-700 ease-in-out border-b-2">
             <Tab className="transition-all text-sm delay-400 cursor-pointer  md:mr-5 ease-in-out inline ">
@@ -38,7 +38,7 @@ const Content = () => {
         </Tabs> */}
         <ContentList />
       </div>
-      <div className="w-full bg-white md:mt-8 lg:mt-0 rounded-md py-6 md:px-6 flex-1 lg:pl-4">
+      <div className="w-full bg-white md:mt-8 lg:mt-0 rounded-md py-6 md:px-4 flex-1 lg:pl-4">
         <ContentSideComponent />
       </div>
     </div>

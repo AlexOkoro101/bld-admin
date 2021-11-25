@@ -35,18 +35,21 @@ const ContentList = () => {
               <div className="md:h-full h-60  w-full rounded  bg-gray-400">
                 <img
                   className="h-full w-full object-cover"
-                  src={item.images[0] ? item.images[0].image_largeUrl : ''}
+                  src={`https://proxybuylike.herokuapp.com/?url=${
+                    item.images[0] ? item.images[0].image_largeUrl : ''
+                  }`}
+                  alt=""
                 />
               </div>
             </div>
-            <div className="md:h-full  md:w-2/3 w-full p-2 flex flex-col justify-between">
+            <div className="md:h-full   w-full p-2 flex flex-col justify-between">
               <div className="flex justify-between">
                 <div>
                   <div>
-                    <span className="text-xs md:text-base font-semibold text-letters mr-4">
+                    <span className="text-xs md:text-sm font-semibold text-letters mr-4">
                       {item.year}
                     </span>
-                    <span className="text-xs md:text-base font-semibold text-letters mx-3">
+                    <span className="text-xs md:text-sm font-semibold text-letters mx-3">
                       {item.make}
                     </span>
                   </div>
@@ -73,15 +76,15 @@ const ContentList = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs md:text-base block font-semibold text-letters mr-4">
+                  <span className="text-xs md:text-sm block font-semibold text-letters mr-4">
                     Authorized Bid
                   </span>
-                  <span className="text-xs md:text-base block font-semibold text-letters mr-4">
+                  <span className="text-xs md:text-sm block font-semibold text-letters mr-4">
                     ${item.bidAmount}
                   </span>
                 </div>
               </div>
-              <div className="flex border-t-2 pt-4 items-center justify-between">
+              <div className="flex border-t-2 pt-2 items-center justify-between">
                 <div>
                   <span className="text-xs block md:inline  font-semibold">
                     Transmission: {item.transmission}
@@ -138,7 +141,7 @@ const ModalComponent = ({ setShowModal, item }) => {
   const [toggler, setToggler] = useState(false);
   const returnLargeimage = () => {
     const largeImageArray = item?.images.map((image) => {
-      return image.image_largeUrl;
+      return `https://proxybuylike.herokuapp.com/?url=${image.image_largeUrl}`;
     });
     return largeImageArray;
   };
@@ -162,7 +165,7 @@ const ModalComponent = ({ setShowModal, item }) => {
           <div
             className="w-64 h-52 cursor-pointer  flex items-center justify-center text-white  rounded overflow-hidden"
             style={{
-              backgroundImage: `url(${item.images[0].image_largeUrl})`,
+              backgroundImage: `url(https://proxybuylike.herokuapp.com/?url=${item.images[0].image_largeUrl})`,
               backgroundSize: 'cover',
             }}
             onClick={() => setToggler(!toggler)}

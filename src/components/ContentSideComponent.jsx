@@ -12,7 +12,7 @@ const ContentSideComponent = () => {
           13 Auctions today
         </Tab>
         <Tab className="transition-all text-xs md:text-sm delay-400 cursor-pointer mx-5 ease-in-out inline ">
-          25 Auctions this week
+          25 Auctions
         </Tab>
       </TabList>
       <TabPanel>

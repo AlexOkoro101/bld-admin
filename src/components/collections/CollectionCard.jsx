@@ -18,7 +18,10 @@ export const CollectionCard = ({ filteredData }) => {
           <div key={id} className="w-56  h-40 bg-black rounded overflow-hidden">
             <img
               className="h-full w-56 object-cover"
-              src={item.images[0] ? item.images[0].image_largeUrl : ''}
+              src={`https://proxybuylike.herokuapp.com/?url=${
+                item.images[0] ? item.images[0].image_largeUrl : ''
+              }`}
+              alt=""
             />
           </div>
         ))}
@@ -26,7 +29,7 @@ export const CollectionCard = ({ filteredData }) => {
           <div
             className="w-56  h-40 flex items-center justify-center text-white  rounded overflow-hidden"
             style={{
-              backgroundImage: `url(${item.vehicles[5].images[0].image_largeUrl})`,
+              backgroundImage: `url(https://proxybuylike.herokuapp.com/?url=${item.vehicles[5].images[0].image_largeUrl})`,
               backgroundSize: 'cover',
             }}
           >
