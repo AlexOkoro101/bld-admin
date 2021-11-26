@@ -9,13 +9,22 @@ export const CollectionCard = ({ filteredData }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   //
-  function displaySmall(item) {
-    let data = item.vehicles.slice(0, 5);
-    let length = item.vehicles.length;
+  function displaySmall(itemData) {
+    let data = itemData.vehicles.slice(0, 5);
+    let length = itemData.vehicles.length;
     return (
-      <div className="mt-4 flex justify-start w-full overflow-hidden gap-4 flex-nowrap">
+      <div className="mt-4  flex justify-start w-full overflow-hidden gap-4 flex-nowrap">
         {data.map((item, id) => (
-          <div key={id} className="w-56  h-40 bg-black rounded overflow-hidden">
+          <div
+            key={id}
+            onClick={() =>
+              router.push(
+                { pathname: '/admin/auctions/' + itemData.name },
+                dispatch(getCollectionDetail(itemData)),
+              )
+            }
+            className="w-56 cursor-pointer  h-40 bg-black rounded overflow-hidden"
+          >
             <img
               className="h-full w-56 object-cover"
               src={`https://proxybuylike.herokuapp.com/?url=${
@@ -27,9 +36,15 @@ export const CollectionCard = ({ filteredData }) => {
         ))}
         {length > 5 ? (
           <div
-            className="w-56  h-40 flex items-center justify-center text-white  rounded overflow-hidden"
+            onClick={() =>
+              router.push(
+                { pathname: '/admin/auctions/' + itemData.name },
+                dispatch(getCollectionDetail(itemData)),
+              )
+            }
+            className="w-56 cursor-pointer h-40 flex items-center justify-center text-white  rounded overflow-hidden"
             style={{
-              backgroundImage: `url(https://proxybuylike.herokuapp.com/?url=${item.vehicles[5].images[0].image_largeUrl})`,
+              backgroundImage: `url(https://proxybuylike.herokuapp.com/?url=${itemData.vehicles[5].images[0].image_largeUrl})`,
               backgroundSize: 'cover',
             }}
           >
@@ -59,7 +74,10 @@ export const CollectionCard = ({ filteredData }) => {
                   )
                 }
               />
-              <h3 className="text-letters">$15,000 - $30,500</h3>
+              <h3 className="text-letters uppercase">
+                {`${ele.owner.info[0]?.firstName || ''} 
+                  ${ele.owner.info[0]?.lastName || ''}`}
+              </h3>
             </div>
             <div className="flex justify-between mt-1 items-center">
               <p className="text-letters text-xs">

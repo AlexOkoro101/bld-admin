@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import FsLightbox from 'fslightbox-react';
+import { UpdateCollection } from './collections/UpdateCollection';
+import { useRouter } from 'next/router';
 
 const ContentList = () => {
   //
+  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [showUpdateContent, setShowUpdateContent] = useState(false);
   const selectedData = useSelector(
     (state) => state.collection.collectionDetail,
   );
@@ -21,8 +25,14 @@ const ContentList = () => {
       <h1 className="font-extrabold text-white rounded px-2 bg-red-500 text-lg text-center uppercase">
         {selectedData.name}
       </h1>
-      {showModal && (
+      {/* {showModal && (
         <ModalComponent setShowModal={setShowModal} item={modalContent} />
+      )} */}
+      {showUpdateContent && (
+        <UpdateCollection
+          setShowUpdateContent={setShowUpdateContent}
+          item={modalContent}
+        />
       )}
       {selectedData &&
         selectedData?.vehicles &&
@@ -107,7 +117,11 @@ const ContentList = () => {
                   md:text-sm
                   mt-2
                 "
-                    onClick={() => handleModal(item)}
+                    onClick={() =>
+                      router.push({
+                        pathname: '/admin/auctions/bid/' + item.vin,
+                      })
+                    }
                   >
                     View Details
                   </button>
@@ -125,6 +139,7 @@ const ContentList = () => {
                   md:text-sm
                   mt-2
                 "
+                    onClick={() => setShowUpdateContent(true)}
                   >
                     UPDATE
                   </button>

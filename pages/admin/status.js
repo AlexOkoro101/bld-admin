@@ -1,5 +1,5 @@
 import Content from '../../src/components/content';
 
 export default function StatusPage() {
-  return <h1>bhcccj</h1>;
+  return <h1>fjhdh</h1>;
 }
