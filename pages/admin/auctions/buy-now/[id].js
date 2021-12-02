@@ -41,6 +41,7 @@ const BidDetails = () => {
   const [userId, setuserId] = useState(null);
   const [processDetails, setprocessDetails] = useState(null);
   const [processStep, setprocessStep] = useState("")
+  const [processstage, setprocessstage] = useState(0);
 
   const router = useRouter();
   const bidId = router.query.id;
@@ -86,7 +87,7 @@ const BidDetails = () => {
       .then((response) => response.text())
       .then((result) => {
         const newResult = JSON.parse(result);
-        console.log("new Result", newResult);
+        console.log("process Result", newResult);
         setprocessDetails(newResult?.data?.details);
         if(newResult?.data == null) {
           setprocessDetails([]);
@@ -100,7 +101,7 @@ const BidDetails = () => {
     return () => {
       retrieveData();
     };
-  }, [bidCollection]);
+  }, [bidCollection, processstage]);
 
   useEffect(() => {
     getProcessFlow();
@@ -113,7 +114,7 @@ const BidDetails = () => {
 
   useEffect(() => {
     // console.log(bidId);
-    fetch('https://buylinke.herokuapp.com/vehicles/vin/' + bidId, {
+    fetch('https://buylinke.herokuapp.com/vehicles/' + bidId, {
       method: 'GET',
       redirect: 'follow',
     })
@@ -133,7 +134,7 @@ const BidDetails = () => {
         console.log(bidCollection);
       })
       .catch((error) => console.log('error', error));
-  }, []);
+  }, [processstage]);
 
   useEffect(() => {
     displaySmall();
@@ -254,9 +255,15 @@ const BidDetails = () => {
       redirect: 'follow'
     };
 
-    fetch("https://buylinke.herokuapp.com/process/add/" + bidCollection?._id, requestOptions)
+    fetch("https://buylinke.herokuapp.com/process/vehicle/" + bidCollection?._id, requestOptions)
     .then(response => response.text())
-    .then(result => console.log(result))
+    .then(result => {
+        console.log(result)
+        const item = JSON.parse(result)
+        if(item.error == false) {
+            setprocessstage(processstage + 1)
+        }
+    })
     .catch(error => console.log('error', error));
   }
 
@@ -277,24 +284,26 @@ const BidDetails = () => {
                   <div className="car-holder grid grid-cols-6 lg:grid-cols-1 items-center  gap-6 md:gap-3 lg:gap-1  py-2.5">
                     <span className="col-span-3 inline-block overflow-hidden rounded-md">
                       <img
-                        className="w-40"
+                        className="w-64"
                         src={bidCollection?.images[0]?.image_largeUrl}
                         alt=""
                       />
                     </span>
                     <div className="col-span-3">
-                      <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
+                      <p className="text-base lg:mt-3 primary-black font-medium uppercase">
                         {`${bidCollection?.name}` ||
                           `${bidCollection?.year} ${bidCollection?.make} ${bidCollection?.model}`}
                       </p>
-                      <p className="primary-black font-medium py-1 text-xs uppercase">
-                        {dollarFormatter.format(bidCollection?.odometer)} mi
-                      </p>
-                      <p className="primary-black font-medium text-xs uppercase">
+                      {bidCollection?.odometer && (
+                        <p className="primary-black font-medium py-1 text-sm uppercase">
+                            {dollarFormatter.format(bidCollection?.odometer)} mi
+                        </p>
+                      )}
+                      <p className="primary-black font-medium text-sm uppercase">
                         vin: {bidCollection?.vin}
                       </p>
-                      <p className="primary-black font-medium font-11 uppercase">
-                        {dollarFormatter.format(bidCollection?.price)}
+                      <p className="primary-black font-medium text-xs uppercase">
+                        ${dollarFormatter.format(bidCollection?.price)}
                       </p>
                     </div>
                   </div>
@@ -304,10 +313,10 @@ const BidDetails = () => {
                       {bidCollection?.trucking &&
                       bidCollection?.trucking !== '0' ? (
                         <tr className="detail-row mb-2">
-                          <td className="sec-black text-xs font-semibold py-1.5">
+                          <td className="sec-black text-sm font-semibold py-1.5">
                             Trucking
                           </td>
-                          <td className="text-xs primary-black font-normal py-1.5">
+                          <td className="text-sm primary-black font-normal py-1.5">
                             ${bidCollection?.trucking || 0}
                           </td>
                         </tr>
@@ -318,56 +327,56 @@ const BidDetails = () => {
                       {bidCollection?.shipping &&
                         bidCollection?.shipping !== '0' && (
                           <tr className="detail-row mb-2">
-                            <td className="sec-black text-xs font-semibold py-1.5">
+                            <td className="sec-black text-sm font-semibold py-1.5">
                               Shipping
                             </td>
-                            <td className="text-xs primary-black font-normal py-1.5">
+                            <td className="text-sm primary-black font-normal py-1.5">
                               ${bidCollection?.shipping || 0}
                             </td>
                           </tr>
                         )}
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Clearing
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           N/A
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Auction Fee
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           $450
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Service Fee
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           $400
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2 ">
-                        <td className="total-border sec-black text-xs font-semibold py-1.5 ">
+                        <td className="total-border sec-black text-sm font-semibold py-1.5 ">
                           Total
                         </td>
-                        <td className="total-border text-xs primary-black font-normal py-1.5 ">
+                        <td className="total-border text-sm primary-black font-normal py-1.5 ">
                           {bidCollection?.bidAmount}
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Deposit
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           $1,000
                         </td>
                       </tr>
@@ -381,7 +390,7 @@ const BidDetails = () => {
                       <p className="font-semibold text-sm py-5 px-2">
                         Bid Tracker
                       </p>
-                      <div className="mb-4">
+                      <div className="mb-9">
                           <select name="process-select" className="w-full border border-gray-400 rounded-lg p-2 text-sm outline-none text-gray-600" id="process-select" value={processStep} onChange={(e) => setprocessStep(e.target.value)}>
                             <option>Choose process step</option>
                             <option value="You placed a bid for...">You placed a bid for...</option>
@@ -401,7 +410,7 @@ const BidDetails = () => {
                             {processDetails?.map((process) => (
                               <tbody
                                 key={process._id}
-                                className="process-body flex items-center jus mb-2 mt-8 lg:mt-11"
+                                className="process-body flex items-center border-b pb-4 mb-4"
                               >
                                 <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
                                   <td>
@@ -425,8 +434,8 @@ const BidDetails = () => {
                                     </small>
                                   </td>
                                 </tr>
-                                <tr className=" mb-3 ">
-                                  <td className="process-circle circle"></td>
+                                <tr className="">
+                                  <td className="process-circle circle w-px bg-gray-300 h-8"></td>
                                 </tr>
                                 <tr>
                                   <td className=" pl-4 mb-3 leading-4 w-44 md:w-72">

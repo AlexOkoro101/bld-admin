@@ -1,5 +1,46 @@
-import Content from '../../src/components/content';
+import { useEffect, useState } from "react"
+import { enviroment } from "../../src/components/environment"
+import UsersTable from "../../src/components/tables/user-table"
 
-export default function Users() {
-  return <h1>bhcccj</h1>;
+function Users() {
+  const [users, setusers] = useState(null)
+
+  useEffect(() => {
+    getUsers()
+    return () => {
+      getUsers()
+    }
+  }, [])
+
+  const getUsers = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(enviroment.BASE_URL + "auth/user/users/all", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        const item = JSON.parse(result)
+        console.log(item)
+
+        if(item.error == false) {
+          setusers(item.data)
+        }
+      })
+      .catch(error => console.log('error', error));
+  }
+
+
+  return (
+    <div className="p-8 pl-24">
+      <div className="users">
+        <p className="uppercase text-base mb-2 font-semibold">All Users</p>
+        <UsersTable users={users}></UsersTable>
+      </div>
+    </div>
+  )
 }
+
+export default Users
+

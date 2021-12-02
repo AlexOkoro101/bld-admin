@@ -1,6 +1,8 @@
+import { useRouter } from 'next/router';
 import React from 'react';
 
 export const CollectionBuyNow = ({ buyNow }) => {
+  const router = useRouter()
   const dollarFormatter = new Intl.NumberFormat();
   const addImage = (params) => {
     if (
@@ -17,9 +19,9 @@ export const CollectionBuyNow = ({ buyNow }) => {
           className=" bg-opacity-20  cursor-pointer rounded-md"
         >
           {params.images[0] ? (
-            <a
+            <div
+              onClick={() => router.push(`/admin/auctions/buy-now/${params._id}`)}
               className="cursor-pointer relative block"
-              href={`/vin/${params.VIN}`}
               style={{
                 width: '100%',
                 height: '203px',
@@ -33,25 +35,26 @@ export const CollectionBuyNow = ({ buyNow }) => {
               {/* <div className="watermark opacity-50 ">
                             <p>BUYLIKEDEALERS.COM</p>
                         </div> */}
-            </a>
+            </div>
           ) : (
-            <a
+            <div
+              onClick={() => router.push(`/admin/auctions/buy-now/${params._id}`)}
               className="cursor-pointer  "
-              href={`/vin/${params.VIN}`}
               style={{
                 width: '100%',
                 height: '203px',
               }}
             >
               <div
+                onClick={() => router.push(`/admin/auctions/buy-now/${params._id}`)}
                 style={{
                   backgroundImage: `url(/img/Rectangle.png)`,
                 }}
-                className="w-full font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                className="w-full cursor-pointer font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
               >
                 IMAGE COMING SOON
               </div>
-            </a>
+            </div>
           )}
         </div>
       );

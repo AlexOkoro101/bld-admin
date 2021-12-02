@@ -1,5 +1,12 @@
-import Content from '../../src/components/content';
+import Rate from "../../src/components/settings-cards/rate"
 
-export default function SettingsPage() {
-  return <h1>bhcccj</h1>;
+function SettingsPage() {
+  return (
+    <div className=" p-8 md:pl-24">
+      <Rate></Rate>
+    </div>
+  )
 }
+
+export default SettingsPage
+
