@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 const style = {
   container: `bg-white h-screen overflow-hidden relative`,
   mainContainer: `flex  bg-customBg flex-col shadow h-screen pl-0 md:pl-8 w-full  `,
-  main: `h-screen bg-white  w-full lg:w-full m-auto `,
+  main: `h-screen bg-white  w-full lg:w-full m-auto overflow-y-scroll`,
 };
 
 export default function DashboardLayout({ children }) {

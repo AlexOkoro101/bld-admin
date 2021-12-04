@@ -29,6 +29,9 @@ function UsersTable({users}) {
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Date Joined
                 </th>
+                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -48,6 +51,11 @@ function UsersTable({users}) {
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                     {dateFormatter(user?.createdAt)}
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1">Edit</button>
+                    <button className="py-1 px-4 text-xs rounded-md bg-green-500 text-white mr-1">Make Admin</button>
+                    <button className="py-1 px-4 text-xs rounded-md bg-red-500 text-white mr-1">Delete</button>
                   </td>
                 </tr>
 

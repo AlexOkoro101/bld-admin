@@ -391,7 +391,8 @@ const BidDetails = () => {
                         Bid Tracker
                       </p>
                       <div className="mb-9">
-                          <select name="process-select" className="w-full border border-gray-400 rounded-lg p-2 text-sm outline-none text-gray-600" id="process-select" value={processStep} onChange={(e) => setprocessStep(e.target.value)}>
+                          <input type="text" list="process" name="process-select" className="w-full border border-gray-400 rounded-lg p-2 text-sm outline-none text-gray-600" id="process-select" value={processStep} onChange={(e) => setprocessStep(e.target.value)} />
+                          <datalist id="process">
                             <option>Choose process step</option>
                             <option value="You placed a bid for...">You placed a bid for...</option>
                             <option value="Your bid has been won and is awaiting balance payment.">Your bid has been won and is awaiting balance payment.</option>
@@ -401,7 +402,7 @@ const BidDetails = () => {
                             <option value="Your car has been shipped to Nigeria and is awaiting clearance at the port.">Your car has been shipped to Nigeria and is awaiting clearance at the port.</option>
                             <option value="Your car has been cleared at the port and is awaiting delivery or pickup.">Your car has been cleared at the port and is awaiting delivery or pickup.</option>
                             <option value="Your car has been delivered.">Your car has been delivered.</option>
-                          </select>
+                          </datalist>
                           <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleProcess}>Submit</button>
                       </div>
                       {processDetails ? (

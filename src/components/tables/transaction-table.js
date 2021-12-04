@@ -35,7 +35,7 @@ function TransactionTable({transactions}) {
             </thead>
             <tbody>
               {transactions?.data?.slice(0).reverse().map((transaction) => (
-                <tr key={transaction?._id} className="cursor-pointer hover:bg-gray-100" onClick={() => router.push('/admin/transaction/' + transaction?._id)}>
+                <tr key={transaction?._id} className="cursor-pointer hover:bg-gray-100" onClick={() => router.push('/admin/auctions/buy-now/' + transaction?.vehicle?._id)}>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                     {transaction?.vehicle?.name || "N/A"}
                   </td>
