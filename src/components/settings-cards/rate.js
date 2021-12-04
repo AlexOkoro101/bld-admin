@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { enviroment } from "../environment";
 import AddRateModal from "../modals/addRateModal";
+import DeleteRateModal from "../modals/deleteRateModal";
 import EditRateModal from "../modals/editRateModal";
 import { on } from "../utils/events";
 
@@ -9,17 +10,19 @@ function Rate() {
     const [currentRate, setcurrentRate] = useState(null);
     const [editRateModal, seteditRateModal] = useState(false)
     const [addRateModal, setaddRateModal] = useState(false)
+    const [deleteRateModal, setdeleteRateModal] = useState(false)
 
     useEffect(() => {
         getRate()
         return () => {
             getRate()
         }
-    }, [addRateModal,editRateModal])
+    }, [addRateModal, editRateModal, deleteRateModal])
 
     useEffect(() => {
         on("closeButton:click", () => seteditRateModal(false));
         on("closeButton:click", () => setaddRateModal(false));
+        on("closeButton:click", () => setdeleteRateModal(false));
     });
 
     const getRate = () => {
@@ -69,6 +72,13 @@ function Rate() {
         seteditRateModal(true)
     }
 
+    const deleteRate = (rate) => {
+        setcurrentRate(rate)
+        setdeleteRateModal(true)
+
+        console.log(deleteRateModal)
+    }
+
 
 
     return (
@@ -95,8 +105,8 @@ function Rate() {
                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">{rate?.name}</td>
                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">{rate?.rate}</td>
                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                            <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1" onClick={(e) => (editRate(rate))}>Edit</button>
-                            <button className="py-1 px-4 text-xs rounded-md bg-red-500 text-white mr-1">Delete</button>
+                            <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1" onClick={(e) => {editRate(rate)}}>Edit</button>
+                            <button className="py-1 px-4 text-xs rounded-md bg-red-500 text-white mr-1" onClick={(e) => {deleteRate(rate)}}>Delete</button>
                         </td>
                     </tr>
 
@@ -113,6 +123,10 @@ function Rate() {
 
             {addRateModal && (
                 <AddRateModal addRateModal={addRateModal}></AddRateModal>
+            )}
+
+            {deleteRateModal && (
+                <DeleteRateModal currentRate={currentRate} deleteRateModal={deleteRateModal}></DeleteRateModal>
             )}
 
         </div>
