@@ -22,10 +22,10 @@ function Users() {
       .then(response => response.text())
       .then(result => {
         const item = JSON.parse(result)
-        console.log(item)
+        console.log(item.data.docs)
 
         if(item.error == false) {
-          setusers(item.data)
+          setusers(item.data.docs)
         }
       })
       .catch(error => console.log('error', error));

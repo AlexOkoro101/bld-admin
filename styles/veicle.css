@@ -1,0 +1,81 @@
+/* .newproduct-a{
+    background: red;
+} */
+
+.newproduct-wrapper {
+  
+    /* display: block; */
+    width: 90%;
+    /* outline: 1px solid green; */
+    overflow-x: scroll;
+    white-space: nowrap;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
+    margin: auto;
+    display: flex;
+  }
+.vehicle-body{
+  width: 90%;
+  margin: auto;
+}
+  .vehicle-sub{
+    width: auto;
+    display: flex
+  }
+  .vehicle-input{
+    width:35%;
+    margin-bottom: 5%;
+    padding-left: 2%;
+  }
+  .vehicle-buttom{
+    /* background: red; */
+    width: 50%;
+    margin: auto;
+    text-align: center;
+  }
+  .vehicle-buttom button{
+    width: 50%;
+  }
+  .newproduct-a{
+    display: inline-block;
+    width: 120px;
+    height: 140px;
+    margin-left: 10px;
+    border-radius: 10px;
+    background: #ccc;;
+    text-align: center;
+    padding-top: 2%;
+    /* background: #ccc; */
+    /* outline: 1px solid black; */
+  }
+
+  input {
+    font-family: "Oswald", sans-serif;
+  }
+  .uploader {
+    cursor: pointer !important;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  
+  .chooseFile {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    padding-left: 200px;
+    margin-right: -200px;
+  }
+  
+  #thumbnail {
+    width: 25%;
+    margin-top: 10px;
+    cursor: pointer;
+    height: auto;
+  }
+  
