@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { enviroment } from "../../src/components/environment"
+import { enviroment } from "../../../src/components/environment"
 // import UsersTable from "../../src/components/tables/user-table"
 import axios from 'axios';
 import Resizer from "react-image-file-resizer";
@@ -291,7 +291,7 @@ const submitData = (e) =>{
          make :make,
         model:model,
         year :year,
-        vin: "B1" + random(),
+        vin: "B" + random()+ random(),
         name: name,
         price: parseInt(price),
         exterior_color : exteriorColor,
@@ -311,7 +311,7 @@ const submitData = (e) =>{
         sellerCity:sellerCity,
         description:description,
         company:"buylikedealers",
-        dealers: true,
+        dealers:true,
         Zip:zip,
         bidAmount:bidAmount,
         facilitationLocation:facilitationLocation,
@@ -330,42 +330,15 @@ const submitData = (e) =>{
       .then(result => {
           console.log(result)
           if(result.error === false){
-            pushImage(result.data)
-          }
-          // const item = JSON.parse(result)
-          // if(item.error == false) {
-          //     setprocessstage(processstage + 1)
-          // }
+              if(photos.length !== 0){
+                  pushImage(result.data)
+                  }
+              }
+         
       })
       .catch(error => console.log('error', error));
     
-    //  console.log(" requestOptions",  requestOptions)
-      // fetch(urlLocal+"/vehicles/upload/new", requestOptions)
-      //  .then(res => res.json())
-      //  .then((res)=>{
-      //       console.log("data, rest---------------------==--->", res)
-      //       // if(res.code === 400 ){
-      //           // console.log("data, rest--==---> false", res)
-      //       //     toast("Sorry wrong input check  !");
-      //       //     this.setState({
-      //       //       ifsubmit:false,
-      //       //       loanData:false
-      //       //     }) 
-                
-      //       //     }else{
-      //       //         // console.log("data, rest--==---> true", res)
-      //       //       if(this.state.images.length !== 0){
-      //       //         this.pushImage(res)
-      //       //         }else{
-      //       //           this.props.history.replace({
-      //       //             pathname: '/product/'+ res._id,
-      //       //             // state: { detail: res}
-      //       //             state: { notice: "true" , message:"Create Event" }
-      //       //             })
-      //       //     }
-      //       // } 
-      // })
-
+ 
     
 }
    
@@ -373,7 +346,7 @@ const submitData = (e) =>{
 const pushImage=(data) => {
     // const id = "count5353905930"
     console.log('done image----===00------->',  photos, "data----=---->" );
-    // const id = data._id
+    const id = data._id
     const uploaders = photos.map(image => {
       const formData = new FormData();
 
@@ -381,28 +354,20 @@ const pushImage=(data) => {
       formData.append('file', image );
       formData.append('filename',image.name);
       formData.append('vehicles_images', true);
-      // formData.append('vehicles_id',  id);
-      // formData.append('owner', props.user._id);
-  //     const options = {
-  //         method: 'POST',
-  //         headers: { 
-  //             'content-type': 'multipart/form-data',
-
-  //         // 'x-access-token': Auth.getToken()
-  //         },
-  //         url:urlLocal+"/vehicles/uploads/image",
-  // };
-  console.log('done formData---------->', formData );
-  // Make an AJAX upload request using Axios
-  return  axios.post("http://localhost:4000/vehicles/uploads/image", formData,  {
-      headers: {
-      'content-type': 'multipart/form-data',
-      
-      // 'x-access-token': Auth.getToken()
-      }
-    }
-  )
-.then(response => {
+      formData.append('vehicle',  id);
+     
+        console.log('done formData---------->', formData );
+        // Make an AJAX upload request using Axios
+        return  axios.post(urlLocal+"/vehicles/uploads/image", formData,  {
+          
+            headers: {
+            'content-type': 'multipart/form-data',
+            
+            // 'x-access-token': Auth.getToken()
+            }
+          }
+        )
+    .then(response => {
         console.log("response ---------------------->", response)
         if(response.error === true){
           // console.log("response yes", response.data)
@@ -418,8 +383,8 @@ const pushImage=(data) => {
         });
     axios.all(uploaders).then(() => {
 
- }).catch(err => 
-  console.log("response yes", )
+    }).catch(err => 
+     console.log("response yes", )
 
 );
 
