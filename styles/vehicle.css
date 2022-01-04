@@ -31,15 +31,7 @@
     margin-bottom: 5%;
     padding-left: 2%;
   }
-  .vehicle-buttom{
-    /* background: red; */
-    width: 50%;
-    margin: auto;
-    text-align: center;
-  }
-  .vehicle-buttom button{
-    width: 50%;
-  }
+
   .newproduct-a{
     display: inline-block;
     width: 120px;
@@ -77,5 +69,18 @@
     margin-top: 10px;
     cursor: pointer;
     height: auto;
+  }
+
+  .editcar label {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .editcar select, .editcar input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    font-size: 13px;
   }
   

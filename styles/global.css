@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
-@import  "./veicle.css";
+@import  "./vehicle.css";
 .react-tabs__tab--selected {
     border-bottom: 3px solid red !important;
     border-top: 0px !important;
