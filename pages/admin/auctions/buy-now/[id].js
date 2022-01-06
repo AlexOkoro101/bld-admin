@@ -267,6 +267,10 @@ const BidDetails = () => {
     .catch(error => console.log('error', error));
   }
 
+  const handleDoc = () => {
+    
+  }
+
   return (
     <div>
       <ToastContainer />
@@ -620,10 +624,10 @@ const BidDetails = () => {
                         Vehicle Documents
                       </p>
                       <div className="doc-upload">
-                          <input type="file" className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" />
-                          <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleProcess}>Submit</button>
+                          <input type="file" multiple className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" />
+                          <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleDoc}>Submit</button>
                       </div>
-                      <div className="pb-10 border mt-2">
+                      <div className="pb-10 border mt-2"> 
                         <div className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4">
                           <div className="flex items-center">
                             <div className="mr-4">

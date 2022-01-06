@@ -7,6 +7,8 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRange } from 'react-date-range';
 import { ClimbingBoxLoader } from "react-spinners";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function CarDetail() {
@@ -75,14 +77,14 @@ function CarDetail() {
         return () => {
             getCarDetails()
         }
-    }, [carVIN])
+    }, [editCar])
 
     useEffect(() => {
         getMakes()
         return () => {
             getMakes()
         }
-    }, [make])
+    }, [])
 
     const getMakes = () => {
         setisLoading(true)
@@ -98,7 +100,7 @@ function CarDetail() {
             console.log(result)
             if(result.error == false) {
                 setMakes(result.data)
-                setModels(result.data[makeIndex]?.models)
+                
                 setisLoading(false)
             }
         })
@@ -117,10 +119,62 @@ function CarDetail() {
             console.log(result)
             if(result.error == false) {
                 setcarDetail(result.data.vehicle)
-            
+                setformValues(result.data.vehicle)
             }
         })
         .catch(error => console.log('error', error));
+    }
+
+    const setformValues = (data) => {
+        setSelectedFiles(data.images)
+        
+        setMake(data.make)
+
+        setModel(data.model)
+        makes.map((make, index) => {
+            if(make.name == data.make) {
+                setModels(makes[index].models)
+                
+            }
+            return make;
+        })
+
+        setYear(data?.year)
+
+        setExteriorColor(data?.exterior_color)
+
+        setVehicleType(data?.vehicle_type)
+
+        setInteriorColor(data?.interior_color)
+
+        setTransmission(data?.transmission)
+
+        setDoor(data?.doors)
+
+        setEngineType(data?.EngineType)
+
+        setInteriorType(data?.interior_type)
+
+        setFuelType(data?.fuel_type)
+
+        setPassengerCapacity(data?.passengerCapacity)
+
+        setPrice(data?.price)
+
+        setSellerCity(data?.sellerCity)
+
+        setOdometer(data?.odometer)
+
+        setDescription(data?.description)
+
+        setBidAmount(data?.bidAmount)
+
+        setZip(data?.zip)
+
+        setFacilitationLocation(data?.facilitationLocation)
+
+        setVehicleLocation(data?.Vehicle_location)
+
     }
 
 
@@ -200,15 +254,15 @@ function CarDetail() {
     
     }
 
-    const renderPhotos = (source) => {
+    const RenderPhotos = () => {
         // console.log('source: ', source);
-        return source.map((photo,i) => {
+        return selectedFiles.map((photo,i) => {
     
           return(
             <div key={i} className="w-40 h-40 bg-gray-100">   
                 <div className="relative p-1 w-full" style={{height: "90%"}} key={i}>
                     <a onClick={() => deletePhoto(i)}>
-                        <i className="fas fa-trash-alt text-red-500 float-right relative -top-1"></i>
+                        <i className="cursor-pointer fas fa-trash-alt text-red-500 float-right relative -top-1"></i>
                     </a>
                     <img src={photo} alt="" className="h-full w-full" key={photo} />
                 </div> 
@@ -218,8 +272,14 @@ function CarDetail() {
         });
     };
 
-    const deletePhoto = () => {
-        
+    const deletePhoto = (id) => {
+        console.log(id)
+
+        selectedFiles.splice(id, 1)
+
+        // console.log(selectedFiles)
+
+        setSelectedFiles(selectedFiles)
     }
 
     const submitForm = () => {
@@ -270,12 +330,16 @@ function CarDetail() {
           fetch(enviroment.BASE_URL + "vehicles/dealers/list/" + carVIN , requestOptions)
           .then(response => response.json())
           .then(result => {
-              console.log(result)
-              if(result.error === false){
-                  if(photos.length !== 0){
+                console.log(result)
+                if(result.error === false){
+                    toast.success("Car Updated!");
+                    setTimeout(() => {
+                        seteditCar(false)
+                    }, 1000);
+                    if(photos.length !== 0){
                       pushImage(result.data?.vehicle?._id)
-                      }
-                  }
+                    }
+                }
               
           })
           .catch(error => console.log('error', error));
@@ -285,6 +349,7 @@ function CarDetail() {
 
 
         const id = data
+        console.log("photos", photos)
         
         // formdata.append('file', photos)
         // photos.forEach(photo => formdata.append('file',photo));
@@ -310,7 +375,9 @@ function CarDetail() {
               
               fetch(enviroment.BASE_URL + "vehicles/uploads/image", requestOptions)
                 .then(response => response.text())
-                .then(result => console.log(result))
+                .then(result => {
+                    console.log(result)
+                })
                 .catch(error => console.log('error', error));
 
         })
@@ -361,6 +428,7 @@ function CarDetail() {
 
     return (
         <div className="p-8 pl-24">
+        <ToastContainer />
             {!editCar ? (
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
                     <div className="flex flex-col md:flex-row -mx-4">
@@ -659,7 +727,7 @@ function CarDetail() {
                                                 </label>
                                             </td>
                                             <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.bidAmount}</span>
+                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.bidAmount ? `$${carDetail?.bidAmount}` : ""}{carDetail?.bidAmount}</span>
                                             </td>
                                            
                                             <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
@@ -712,7 +780,7 @@ function CarDetail() {
                                 </div>
 
                             ) : (
-                                <div className="flex flex-wrap gap-2">{renderPhotos(selectedFiles)}</div>
+                                <div className="flex flex-wrap gap-2"><RenderPhotos /></div>
 
                             )}
                             </div>
@@ -725,8 +793,8 @@ function CarDetail() {
                                 <label>Make</label>
                                 <select name="make" id="make" value={make} onChange={(e) => {
                                     setMake(e.target.value)
-                                    setmakeIndex(makes.findIndex(carMake => carMake.name === make))
-                                    console.log(makeIndex)
+                                    const index = makes.findIndex(carMake => carMake.name === e.target.value)
+                                    setModels(makes[index]?.models)
                                     
                                 }}>
                                     <option value="">Select Make</option>
@@ -756,6 +824,7 @@ function CarDetail() {
                             <div className="">
                                 <label>Year</label>
                                 <select name="year" id="year" value={year} onChange={(e) => setYear(e.target.value)}>
+                                <option value="">Select Year</option>
                                     {yearList.map((year, index) => (
                                         <option key={index} value={year.year}>{year.year}</option>
 
