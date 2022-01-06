@@ -15,22 +15,26 @@ function MyApp({ Component, pageProps }) {
       <PersistGate loading={null} persistor={persistor}>
         <>
           <Head>
-          <link
+          {/* <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
           integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
           crossorigin="anonymous"
-        />
-        <link
+        /> */}
+        {/* <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"
           crossorigin="anonymous"
-        />
-        <link
+        /> */}
+        {/* <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css"
           crossorigin="anonymous"
-        />
+        /> */}
+            <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            />
             <title>Buylike Admin </title>
           </Head>
           <DashboardLayout>
