@@ -24,10 +24,12 @@ function MyApp({ Component, pageProps }) {
         <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"
+          crossorigin="anonymous"
         />
         <link
           rel="stylesheet"
           href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css"
+          crossorigin="anonymous"
         />
             <title>Buylike Admin </title>
           </Head>

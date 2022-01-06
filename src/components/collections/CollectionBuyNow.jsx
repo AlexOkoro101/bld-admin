@@ -87,7 +87,7 @@ export const CollectionBuyNow = ({ buyNow }) => {
       id="car-grid"
     >
       {buyNow?.length > 0 &&
-        buyNow?.map(
+        buyNow?.slice(0).reverse().map(
           (ele, id) =>
             ele && (
               <div
