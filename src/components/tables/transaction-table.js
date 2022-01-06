@@ -1,5 +1,4 @@
 import router, { useRouter } from 'next/router';
-import React from 'react'
 
 function TransactionTable({transactions}) {
     const router = useRouter()
@@ -11,7 +10,7 @@ function TransactionTable({transactions}) {
     }
 
     return (
-        <div className="block w-full overflow-x-auto border">
+        <div className="block w-full overflow-auto border h-96">
           {/* transaction table */}
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="thead-light bg-gray-50">

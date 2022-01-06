@@ -1,6 +1,4 @@
-import React from 'react'
-
-function UsersTable({users}) {
+function UserSearch({searches}) {
     function dateFormatter(val) {
         const formatDate = Date.parse(val)
         const work = new Intl.DateTimeFormat('en-NG').format(formatDate)
@@ -15,48 +13,36 @@ function UsersTable({users}) {
             <thead className="thead-light bg-gray-50">
               <tr>
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                  Name
+                  User
                 </th>
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                  Email
+                  Make
                 </th>
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                  Phone Number
+                  Model
                 </th>
                 <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                  Address
-                </th>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                  Date Joined
-                </th>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                  Action
+                  Date
                 </th>
               </tr>
             </thead>
             <tbody>
-              {users?.slice(0).reverse().map((user) => (
-                <tr key={user?._id} className="cursor-pointer">
+              {searches?.slice(0).reverse().map((search, index) => (
+                <tr key={index} className="cursor-pointer">
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                    {user?.profile?.firstName || "N/A"}
+                    {search.user || "N/A"}
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user?.email || "N/A"}
+                    {search.make || "N/A"}
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                   {user?.profile?.phoneNumber || "N/A"}
+                   {search.model || "N/A"}
                   </td>
+                 
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user?.profile?.address || "N/A"}
+                    {dateFormatter(search.createdAt)}
                   </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {dateFormatter(user?.createdAt)}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1">Edit</button>
-                    <button className="py-1 px-4 text-xs rounded-md bg-green-500 text-white mr-1">Make Admin</button>
-                    <button className="py-1 px-4 text-xs rounded-md bg-red-500 text-white mr-1">Delete</button>
-                  </td>
+                  
                 </tr>
 
               ))}
@@ -66,4 +52,4 @@ function UsersTable({users}) {
     )
 }
 
-export default UsersTable
+export default UserSearch
