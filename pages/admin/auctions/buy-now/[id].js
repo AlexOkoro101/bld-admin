@@ -666,6 +666,7 @@ const BidDetails = () => {
                           <input type="file" multiple className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" onChange={(e) => selectImages(e)} />
                           <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleDoc}>Submit</button>
                       </div>
+                      {bidCollection?.documents.length > 0 && (
                       <div className="pb-10 border mt-2"> 
                         <div className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4">
                           <div className="flex items-center">
@@ -748,6 +749,8 @@ const BidDetails = () => {
                           </div>
                         </div>
                       </div>
+
+                      )}
                     </div>
                   </div>
                 </section>
