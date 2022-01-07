@@ -1,5 +1,5 @@
 import HomeIcon from './icons/home';
-import StatusIcon from './icons/status';
+import SearchIcon from './icons/search';
 import CreditsIcon from './icons/credits';
 import ArchivesIcon from './icons/archives';
 import SettingsIcon from './icons/settings';
@@ -13,9 +13,9 @@ const data = [
     link: '/',
   },
   {
-    title: 'Estimator',
-    icon: <StatusIcon />,
-    link: '/admin/status',
+    title: 'Search',
+    icon: <SearchIcon />,
+    link: '/admin/search',
   },
   {
     title: 'Auctions',
@@ -23,12 +23,12 @@ const data = [
     link: '/admin/auctions',
   },
   {
-    title: 'Members',
-    icon: <CreditsIcon />,
-    link: '/admin/credits',
+    title: 'Vehicles',
+    icon: <UsersIcon />,
+    link: '/admin/vehicles',
   },
   {
-    title: 'Media',
+    title: 'Settings',
     icon: <SettingsIcon />,
     link: '/admin/settings',
   },
@@ -38,8 +38,8 @@ const data = [
     link: '/admin/documentation',
   },
   {
-    title: 'Admin Users',
-    icon: <UsersIcon />,
+    title: 'Users',
+    icon: <CreditsIcon />,
     link: '/admin/users',
   },
 ];

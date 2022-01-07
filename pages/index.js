@@ -2,12 +2,10 @@ import { useEffect, useState } from "react"
 import Cards from "../src/components/dashboard-cards";
 import { enviroment } from "../src/components/environment";
 import TransactionTable from "../src/components/tables/transaction-table"
-import UserSearch from "../src/components/tables/user-search";
 
 function HomePage() {
   const [transactions, settransactions] = useState(null);
   const [users, setusers] = useState(null)
-  const [searches, setsearches] = useState(null)
 
   useEffect(() => {
     getTransactions()
@@ -16,12 +14,6 @@ function HomePage() {
     }
   }, [])
 
-  useEffect(() => {
-    getSearches()
-    return () => {
-      getSearches()
-    }
-  }, [])
 
   const getTransactions = () => {
     var requestOptions = {
@@ -42,22 +34,7 @@ function HomePage() {
     .catch(error => console.log('error', error));
   }
 
-  const getSearches = () => {
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-    
-    fetch(enviroment.BASE_URL + "search", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        if(result.error == false) {
-          setsearches(result.data)
-        }
-      })
-      .catch(error => console.log('error', error));
-  }
+  
 
 
   return (
@@ -69,10 +46,7 @@ function HomePage() {
         <TransactionTable transactions={transactions}></TransactionTable>
       </div>
 
-      <div className="search">
-        <p className="uppercase text-base mb-2 font-semibold">Top Searches</p>
-        <UserSearch searches={searches}></UserSearch>
-      </div>
+      
 
 
     </div>

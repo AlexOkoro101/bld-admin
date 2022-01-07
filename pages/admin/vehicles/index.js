@@ -457,7 +457,7 @@ const selectImages = (event) => {
       <div className="users overflow-hidden">
         <p className="uppercase text-base mb-2 font-semibold float-left">vehicles</p>
         <p className="uppercase text-base mb-2 font-semibold float-right" onClick={createCar}>                  
-          <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1"><i className="fas fa-plus"></i> Add Car</button>
+          <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1"><i className="fa fa-plus"></i> Add Car</button>
         </p>
  
       </div>
@@ -465,7 +465,7 @@ const selectImages = (event) => {
       <div className="flex flex-wrap">
       {dealerCars && (
         <>
-          {dealerCars?.map((car, index) => (
+          {dealerCars?.slice(0).reverse().map((car, index) => (
             <div key={index} className="bg-white inline-block shadow-md border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
                   {!car.images.length ? (

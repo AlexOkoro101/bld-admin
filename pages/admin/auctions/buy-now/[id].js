@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import FsLightbox from 'fslightbox-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { enviroment } from '../../../../src/components/environment';
 
 const BidDetails = () => {
   var dollarFormatter = new Intl.NumberFormat();
@@ -16,8 +17,8 @@ const BidDetails = () => {
       draggable: true,
       progress: undefined,
     });
-  const toastSuccess = () =>
-    toast.success(`${message ? message : 'Success'}`, {
+  const docupload = () =>
+    toast.success('Upload Successful', {
       position: 'top-right',
       autoClose: 5000,
       hideProgressBar: true,
@@ -43,15 +44,15 @@ const BidDetails = () => {
   const [processStep, setprocessStep] = useState("")
   const [processstage, setprocessstage] = useState(0);
 
+
+  const [photos, setPhotos] = useState([])
+  const [photo, setPhoto] = useState([])
+  const [viewPhoto, setViewPhoto] = useState([])
+  const [selectedFiles, setSelectedFiles ] = useState([]);
+
   const router = useRouter();
   const bidId = router.query.id;
-  // const adjustHeight = () => {
-  //   const proccessBody = document.getElementsByClassName('tracker-table');
-  //   var proccessBodyHeight = proccessBody[0]?.offsetHeight;
-  //   console.log(proccessBodyHeight);
-  //   const processCircle = document.querySelector('.process-circle');
-  //   processCircle.style.setProperty('--height', `${proccessBodyHeight}px`);
-  // };
+  
 
   const retrieveData = () => {
     const userActive = localStorage.getItem('user');
@@ -267,7 +268,45 @@ const BidDetails = () => {
     .catch(error => console.log('error', error));
   }
 
+  const selectImages = (event) => {
+    // console.log(event.target.files)
+    setPhotos(event.target.files)
+  }
+
   const handleDoc = () => {
+    const id = bidCollection?._id;
+    console.log("photos", photos)
+    
+
+    for(const photo of photos) {
+      
+      var formdata = new FormData();
+      formdata.append('file', photo)
+      formdata.append('vehicle', true);
+      formdata.append('vehicle',  id);
+      formdata.append('document_name', photo.name)
+  
+      var requestOptions = {
+          method: 'POST',
+          body: formdata,
+          redirect: 'follow',
+          mode: 'no-cors'
+          
+      };
+  
+      console.log('done formData---------->', formdata );
+      console.log(photo)
+        
+        fetch(enviroment.BASE_URL + "vehicles/uploads/image", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+              console.log(result)
+              docupload()
+          })
+          .catch(error => console.log('error', error));
+    }
+    
+
     
   }
 
@@ -624,7 +663,7 @@ const BidDetails = () => {
                         Vehicle Documents
                       </p>
                       <div className="doc-upload">
-                          <input type="file" multiple className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" />
+                          <input type="file" multiple className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" onChange={(e) => selectImages(e)} />
                           <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleDoc}>Submit</button>
                       </div>
                       <div className="pb-10 border mt-2"> 
