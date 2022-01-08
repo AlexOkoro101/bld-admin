@@ -264,7 +264,11 @@ function CarDetail() {
                     <a onClick={() => deletePhoto(i)}>
                         <i className="cursor-pointer fas fa-trash-alt text-red-500 float-right relative -top-1"></i>
                     </a>
-                    <img src={photo} alt="" className="h-full w-full" key={photo} />
+                    {typeof(photo) === 'object' ? (
+                        <img src={photo?.image_largeUrl} alt="" key={photo?.image_largeUrl} className="h-full w-full" />
+                      ) : (
+                        <img src={photo} alt="" className="h-full w-full" key={photo} />
+                      )}
                 </div> 
             </div>
           )
@@ -351,8 +355,6 @@ function CarDetail() {
         const id = data
         console.log("photos", photos)
         
-        // formdata.append('file', photos)
-        // photos.forEach(photo => formdata.append('file',photo));
         photos.map((photo) => {
             var formdata = new FormData();
             formdata.append('file', photo)
@@ -364,9 +366,6 @@ function CarDetail() {
                 body: formdata,
                 redirect: 'follow',
                 mode: 'no-cors'
-                // headers: {
-                //     'Content-Type': 'multipart/Form-data'
-                // }
                 
             };
     
@@ -382,47 +381,6 @@ function CarDetail() {
 
         })
 
-
-        // console.log('done image----===00------->',  photos, "data----=---->" );
-        // const id = data._id
-        // const uploaders = photos.map(image => {
-        //   const formData = new FormData();
-  
-        //   console.log('done image- let me see-- ->', image );
-        //   formData.append('file', image );
-        //   formData.append('filename',image.name);
-        //   formData.append('vehicles_images', true);
-        //   formData.append('vehicle',  id);
-        
-        //     console.log('done formData---------->', formData );
-        //     // Make an AJAX upload request using Axios
-        //     return  axios.post(enviroment.BASE_URL + "vehicles/uploads/image", formData,  {
-              
-        //         headers: {
-        //         'content-type': 'multipart/form-data',
-                
-        //         // 'x-access-token': Auth.getToken()
-        //         }
-        //       }
-        //     )
-        // .then(response => {
-        //     console.log("response ---------------------->", response)
-        //     if(response.error === true){
-        //       // console.log("response yes", response.data)
-        //       // setBodCut(false)
-        //       // setSaveLoader(false)
-        //     // toast("Save successful ")
-            
-        //   }else{
-            
-        //     }
-              
-        //     })
-        //     });
-        // axios.all(uploaders).then(() => {
-  
-        // }).catch(err => 
-        // console.log("response yes", ));
   
     }
 
