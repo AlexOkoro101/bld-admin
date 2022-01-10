@@ -46,11 +46,13 @@ export const CollectionBuyNow = ({ buyNow }) => {
               }}
             >
               <div
-                onClick={() => router.push(`/admin/auctions/buy-now/${params._id}`)}
+                onClick={() => {
+                  console.log("ya")
+                  router.push(`/admin/auctions/buy-now/${params._id}`)}}
                 style={{
                   backgroundImage: `url(/img/Rectangle.png)`,
                 }}
-                className="w-full cursor-pointer font-semibold text-white object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
+                className="w-full cursor-pointer font-semibold text-black object-cover bg-no-repeat	flex justify-center items-center h-full rounded-md object-center"
               >
                 IMAGE COMING SOON
               </div>
@@ -91,11 +93,12 @@ export const CollectionBuyNow = ({ buyNow }) => {
           (ele, id) =>
             ele && (
               <div
+                onClick={() => router.push(`/admin/auctions/buy-now/${ele.vehicle._id}`)}
                 key={id}
                 className={
                   open == true
-                    ? ' car-display-holder flex flex-col justify-between box-border   p-4 mb-5'
-                    : ' car-display-holder flex flex-col justify-between box-border  p-4 mb-5'
+                    ? ' car-display-holder flex flex-col justify-between box-border cursor-pointer  p-4 mb-5'
+                    : ' car-display-holder flex flex-col justify-between box-border cursor-pointer p-4 mb-5'
                 }
                 style={{
                   height: 'auto',
@@ -113,50 +116,39 @@ export const CollectionBuyNow = ({ buyNow }) => {
                   </p>
 
                   {/* Vehicle Location here */}
-                  <div className="flex justify-between pt-1.5">
-                    <p className=" w-32 overflow-hidden   text-xs flex items-center sec-black font-10 font-normal car-location">
-                      {' '}
-                      <span className="mr-1">
-                        <img
-                          src="../../assets/img/vectors/red-location-beacon.svg"
-                          alt="location"
-                          className="w-4 h-4"
-                        />
-                      </span>{' '}
-                      <p className="truncate">
-                        {ele.vehicle?.facilitationLocation.replace(
+                  <div className="pt-1.5">
+                    <p className="text-sm flex items-center sec-black font-normal">
+                     
+                      <p className="">
+                        {/* {ele.vehicle?.facilitationLocation.replace(
                           'Manheim',
                           '',
-                        )}
+                        )} */}
+                        {ele.vehicle?.name}
                       </p>
                     </p>
+                  </div>
                     <div className="ml-auto mt-2 flex self-center">
-                      <img
-                        src="../../assets/img/vectors/red-date.svg"
-                        alt="date"
-                      />
-                      <p className=" text-xs sec-black font-10 ml-1 font-normal">
+                     
+                      <p className=" text-xs sec-black font-10 font-normal">
                         {' '}
-                        {new Date(ele.vehicle?.createdAt).toLocaleDateString(
+                        ${dollarFormatter.format(ele?.bidAmount)}
+                        {/* {new Date(ele.vehicle?.createdAt).toLocaleDateString(
                           'en-NG',
                           {
                             year: 'numeric',
                             day: 'numeric',
                             month: 'long',
                           },
-                        )}
+                        )} */}
                       </p>
                     </div>
-                  </div>
 
                   {/* Vehicle Year here */}
                   <p className=" text-xs sec-black font-11 flex justify-between w-full  items-center pt-1.5 ">
-                    {ele.vehicle?.year}
+                    {ele?.owner?.email}
                     <span className="">
-                      {ele.vehicle?.price
-                        ? dollarFormatter.format(ele.vehicle?.price)
-                        : '0'}{' '}
-                      miles
+                      {ele?.owner?.profile?.phoneNumber}{' '}
                     </span>
                   </p>
 

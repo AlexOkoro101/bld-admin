@@ -30,7 +30,7 @@ function UserSearch({searches}) {
               {searches?.slice(0).reverse().map((search, index) => (
                 <tr key={index} className="cursor-pointer">
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                    {search.user || "N/A"}
+                    {search.user.email || "N/A"}
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                     {search.make || "N/A"}
