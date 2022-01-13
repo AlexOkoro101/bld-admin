@@ -41,7 +41,7 @@ export const Collections = () => {
   }, []);
   //
   return (
-    <div className="md:pt-8 w-full h-full  p-8 md:pl-24 bg-customBg pb-24">
+    <div className="md:pt-8 w-full p-8 md:pl-24 bg-customBg pb-24">
       <div className="flex mb-10 w-full items-center justify-start gap-4">
         <CustomButton
           onClick={() => setActiveCard(false)}
