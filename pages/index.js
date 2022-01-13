@@ -7,6 +7,11 @@ function HomePage() {
   const [transactions, settransactions] = useState(null);
   const [users, setusers] = useState(null)
 
+
+  //Pagination
+  const [pageCount, setpageCount] = useState(0)
+  const [totalPage, settotalPage] = useState(0)
+
   useEffect(() => {
     getTransactions()
     return () => {
@@ -29,9 +34,38 @@ function HomePage() {
 
       if(item.error == false) {
         settransactions(item)
+        setpageCount(item.data.current_page)
+        settotalPage(item.data.last_page)
       }
     })
     .catch(error => console.log('error', error));
+  }
+
+  const fetchTransactions = (currentPage) => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(enviroment.BASE_URL + "transactions?page="  + currentPage, requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      const item = JSON.parse(result)
+      console.log(item)
+
+      if(item.error == false) {
+        settransactions(item)
+      }
+    })
+    .catch(error => console.log('error', error));
+  }
+
+  const handlePageChange = (data) => {
+    console.log(data.selected)
+
+    let currentPage = data.selected + 1
+
+    fetchTransactions(currentPage)
   }
 
   

@@ -9,7 +9,7 @@ function UsersTable({users}) {
     }
 
     return (
-        <div className="block w-full overflow-x-auto h-96 border">
+        <div className="block w-full border mb-10">
           {/* transaction table */}
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="thead-light bg-gray-50">
@@ -55,7 +55,7 @@ function UsersTable({users}) {
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                     <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1">Edit</button>
                     <button className="py-1 px-4 text-xs rounded-md bg-green-500 text-white mr-1">Make Admin</button>
-                    <button className="py-1 px-4 text-xs rounded-md bg-red-500 text-white mr-1">Delete</button>
+                    <button className="py-1 px-4 text-xs rounded-md bg-yellow-500 text-white mr-1">Block</button>
                   </td>
                 </tr>
 

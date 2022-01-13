@@ -12,6 +12,9 @@ function Vehicies() {
   const router = useRouter()
 
 
+  var numberFormatter = new Intl.NumberFormat();
+
+
   const [users, setusers] = useState(null)
   const [images, setImages] = useState([])
   const [makes , setMakes] = useState([])
@@ -482,14 +485,34 @@ const selectImages = (event) => {
               </a>
               <div className="p-5">
                   <a href="#">
-                      <h5 className="text-gray-900 font-semibold text-base tracking-tight mb-2 dark:text-white uppercase">{car.name || "No name"}</h5>
+                      <h5 className="text-black font-semibold text-sm tracking-tight dark:text-white uppercase">{`${car.make} ${car.model}` || "No name"}</h5>
                   </a>
-                  <p className="font-normal text-gray-700 dark:text-gray-400 text-sm">VIN: {car.vin || "N/A"}</p>
-                  <p className="font-normal text-gray-700 mb-3 dark:text-gray-400 text-sm">Price: {car.price ? `$${car.price}` : "N/A"}</p>
-                  <button onClick={() => router.push('/admin/vehicles/' + car.vin)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                      View
-                      
-                  </button>
+                  <div className="flex gap-x-2 font-medium text-sm text-gray-500">
+                    <p>{car.year || "year"}</p>
+                    <p>{car.odometer ? (`${numberFormatter.format(car.odometer)} miles`) : "miles"}</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="font-normal text-sm text-gray-500">{car.pickupLocation || "Location"}</p>
+                    <p style={{fontSize: "10px"}} className="font-normal text-gray-500">
+                    {car.auctionEndTime ? (
+                      new Date(car?.auctionEndTime).toLocaleDateString("en-NG",
+                                {
+                                    year: "numeric",
+                                    day: "numeric",
+                                    month: "long",
+                                }
+                            )
+                    ) : "auction date"}
+                    </p>
+                  </div>
+                  <div className="flex justify-between mt-4">
+                    <p className="font-normal text-gray-500 mb-3 dark:text-gray-400 text-base">{car.price ? `$${numberFormatter.format(car.price)}` : "Price"}</p>
+                    <button style={{fontSize: "10px"}} onClick={() => router.push('/admin/vehicles/' + car.vin)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-lg px-5 py-1 text-center inline-flex items-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        View
+                        
+                    </button>
+
+                  </div>
               </div>
             </div>
 

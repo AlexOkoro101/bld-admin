@@ -1,6 +1,7 @@
 import router, { useRouter } from 'next/router';
 
 function TransactionTable({transactions}) {
+
     const router = useRouter()
     function dateFormatter(val) {
         const formatDate = Date.parse(val)
@@ -9,6 +10,7 @@ function TransactionTable({transactions}) {
         return work;
     }
 
+  
     return (
         <div className="block w-full overflow-auto border h-96">
           {/* transaction table */}
