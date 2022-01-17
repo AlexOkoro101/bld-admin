@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Cards from "../src/components/dashboard-cards";
 import { enviroment } from "../src/components/environment";
 import TransactionTable from "../src/components/tables/transaction-table"
+import ReactPaginate from 'react-paginate'
 
 function HomePage() {
   const [transactions, settransactions] = useState(null);
@@ -34,8 +35,8 @@ function HomePage() {
 
       if(item.error == false) {
         settransactions(item)
-        setpageCount(item.data.current_page)
-        settotalPage(item.data.last_page)
+        setpageCount(item.page)
+        settotalPage(item.total)
       }
     })
     .catch(error => console.log('error', error));
@@ -78,6 +79,20 @@ function HomePage() {
       <div className="trasactions">
         <p className="uppercase text-base mb-2 font-semibold">All Transactions</p>
         <TransactionTable transactions={transactions}></TransactionTable>
+        <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          pageCount={totalPage}
+          onPageChange={handlePageChange}
+          containerClassName={'pagination justify-center'}
+          pageClassName={'page-item'}
+          pageLinkClassName={'page-link'}
+          previousClassName={'page-item'}
+          nextClassName={'page-item'}
+          nextLinkClassName={'page-link'}
+          previousLinkClassName={'page-link'}
+          activeClassName={'active'}
+        ></ReactPaginate>
       </div>
 
       

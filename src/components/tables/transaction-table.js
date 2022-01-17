@@ -12,7 +12,7 @@ function TransactionTable({transactions}) {
 
   
     return (
-        <div className="block w-full overflow-auto border h-96">
+        <div className="block w-full border mb-10">
           {/* transaction table */}
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="thead-light bg-gray-50">
