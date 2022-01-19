@@ -339,7 +339,7 @@ function CarDetail() {
             body: JSON.stringify(data),
           };
       
-          fetch(enviroment.BASE_URL + "vehicles/dealers/list/" + carVIN , requestOptions)
+          fetch(enviroment.BASE_URL + "vehicles/dealers/list/" + carDetail.Bvin , requestOptions)
           .then(response => response.json())
           .then(result => {
                 console.log(result)
@@ -388,6 +388,9 @@ function CarDetail() {
                 .then(result => {
                     setisLoading(false)
                     console.log(result)
+                    setTimeout(() => {
+                            seteditCar(false)
+                    }, 1000);
                     toast.success("Image Uploaded!");
                 })
                 .catch(error => console.log('error', error));
@@ -405,7 +408,7 @@ function CarDetail() {
             redirect: 'follow'
           };
           
-          fetch(enviroment.BASE_URL + "vehicles/" + carDetail._id, requestOptions)
+          fetch(enviroment.BASE_URL + "vehicles/" + carDetail?._id, requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
@@ -479,9 +482,9 @@ function CarDetail() {
                                             ) : (
                                                 <>
                                                 {typeof(carDetail.images[0]) === 'object' ? (
-                                                    <img src={carDetail.images[0]?.image_largeUrl} alt="" />
+                                                    <img src={carDetail.images[0]?.image_largeUrl} alt="" className="w-full h-full object-cover" />
                                                 ) : (
-                                                    <img src={carDetail.images[0]} alt="" />
+                                                    <img src={carDetail.images[0]} alt="" className="w-full h-full object-cover"/>
                                                 )}
                                                 </>
                                             )}

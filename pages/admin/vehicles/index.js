@@ -476,9 +476,9 @@ const selectImages = (event) => {
                   ) : (
                     <div className="focus:outline-none w-full rounded-t-lg h-24 md:h-48 bg-gray-100 flex items-center justify-center">
                       {typeof(car.images[0]) === 'object' ? (
-                        <img src={car.images[0]?.image_largeUrl} alt="" />
+                        <img src={car.images[0]?.image_largeUrl} alt="" className="h-full w-full object-cover" />
                       ) : (
-                        <img src={car.images[0]} alt="" />
+                        <img src={car.images[0]} alt="" className="h-full w-full object-cover" />
                       )}
                     </div>
                   )}
@@ -492,7 +492,7 @@ const selectImages = (event) => {
                     <p>{car.odometer ? (`${numberFormatter.format(car.odometer)} miles`) : "miles"}</p>
                   </div>
                   <div className="flex justify-between">
-                    <p className="font-normal text-sm text-gray-500">{car.pickupLocation || "Location"}</p>
+                    <p className="font-normal text-sm text-gray-500">{car.Vehicle_location || "Location"}</p>
                     <p style={{fontSize: "10px"}} className="font-normal text-gray-500">
                     {car.auctionEndTime ? (
                       new Date(car?.auctionEndTime).toLocaleDateString("en-NG",
