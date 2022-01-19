@@ -5,13 +5,17 @@ import { enviroment } from "../../../src/components/environment"
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRange } from 'react-date-range';
-import { ClimbingBoxLoader } from "react-spinners";
+import { ClipLoader} from "react-spinners";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { route } from "next/dist/next-server/server/router";
 
 
 function CarDetail() {
+
+
+    
 
     //Form values
     const [dateRange, setdateRange] = useState([
@@ -23,6 +27,8 @@ function CarDetail() {
       ]);
 
       const [isLoading, setisLoading] = useState(false)
+      const [deleteIsLoading, setdeleteIsLoading] = useState(false)
+      const [publishIsLoading, setpublishIsLoading] = useState(false)
 
       const [images, setImages] = useState([])
       const [makes , setMakes] = useState([])
@@ -288,6 +294,8 @@ function CarDetail() {
 
     const submitForm = () => {
 
+        setisLoading(true)
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -336,12 +344,15 @@ function CarDetail() {
           .then(result => {
                 console.log(result)
                 if(result.error === false){
-                    toast.success("Car Updated!");
-                    setTimeout(() => {
-                        seteditCar(false)
-                    }, 1000);
                     if(photos.length !== 0){
-                      pushImage(result.data?.vehicle?._id)
+                        pushImage(result.data?.vehicle?._id)
+                    } else {
+                        setisLoading(false)
+                        toast.success("Car Updated!");
+                        setTimeout(() => {
+                            seteditCar(false)
+                        }, 1000);
+                        
                     }
                 }
               
@@ -375,7 +386,9 @@ function CarDetail() {
               fetch(enviroment.BASE_URL + "vehicles/uploads/image", requestOptions)
                 .then(response => response.text())
                 .then(result => {
+                    setisLoading(false)
                     console.log(result)
+                    toast.success("Image Uploaded!");
                 })
                 .catch(error => console.log('error', error));
 
@@ -384,335 +397,414 @@ function CarDetail() {
   
     }
 
+    const deleteCar = () => {
+        setdeleteIsLoading(true)
+
+        var requestOptions = {
+            method: 'DELETE',
+            redirect: 'follow'
+          };
+          
+          fetch(enviroment.BASE_URL + "vehicles/" + carDetail._id, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                setdeleteIsLoading(false)
+                if(result.status) {
+                    toast.success("Car Deleted!");
+                    setTimeout(() => {
+                        router.push('/admin/vehicles')
+                    }, 1000);
+                }
+            })
+            .catch(error => console.log('error', error));
+    }
+
+    const publishCar = () => {
+        setpublishIsLoading(true)
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "publish": true
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "vehicles/publish/61d2bb296db8d404b102f06b", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            setpublishIsLoading(false)
+
+            if(result.error == false) {
+                toast.success("Vehicle Published")
+                setTimeout(() => {
+                    router.push('/admin/vehicles')
+                }, 1000);
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
     return (
         <div className="p-8 pl-24">
         <ToastContainer />
             {!editCar ? (
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-                    <div className="flex flex-col md:flex-row -mx-4">
-                        <div className="md:flex-1 px-4">
-                            <div>
-                                <div className="h-64 md:h-80 rounded-lg bg-gray-100 mb-4">
-                                    <div className="h-64 md:h-80 rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
-                                        {!carDetail?.images.length ? (
-                                            <span className="text-3xl text-gray-700">No Image</span>
+                <div>
+                    <div className="flex justify-end">
+                        <button onClick={publishCar} type="button" className="h-10 text-sm px-6 py-2 font-semibold rounded-md bg-green-600 hover:bg-green-500 text-white">
+                            {publishIsLoading ? (
+                                <ClipLoader></ClipLoader>
+                            ) : (
+                                <>Publish Car</>
+                            )}
+                            
+                        </button>
+                    </div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 border p-8">
+                        <div className="flex flex-col md:flex-row -mx-4">
+                            <div className="md:flex-1 px-4">
+                                <div>
+                                    <div className="h-64 md:h-80 rounded-lg bg-gray-100 mb-4">
+                                        <div className="h-64 md:h-80 rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
+                                            {!carDetail?.images.length ? (
+                                                <span className="text-3xl text-gray-700">No Image</span>
+                                            ) : (
+                                                <>
+                                                {typeof(carDetail.images[0]) === 'object' ? (
+                                                    <img src={carDetail.images[0]?.image_largeUrl} alt="" />
+                                                ) : (
+                                                    <img src={carDetail.images[0]} alt="" />
+                                                )}
+                                                </>
+                                            )}
+                                        </div>
+
+                                    </div>
+
+                                    <div className="flex -mx-2 mb-4">
+                                        <template x-for="i in 4">
+                                        <div className="flex-1 px-2">
+                                            <button className="focus:outline-none w-full rounded-lg h-24 md:h-32 bg-gray-100 flex items-center justify-center">
+                                            <span x-text="i" className="text-2xl"></span>
+                                            </button>
+                                        </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="md:flex-1 px-4">
+                                <h2 className="mb-2 leading-tight tracking-tight font-semibold text-gray-800 text-xl md:text-3xl uppercase">{carDetail?.name || "No name"}</h2>
+                                <p className="text-gray-500 text-sm">VIN <a href="#" className="text-indigo-600 hover:underline">{carDetail?.vin}</a></p>
+                                <p className="text-gray-500 text-sm">Price <a href="#" className="text-indigo-600 hover:underline">{carDetail?.price ? `$${carDetail?.price}` : "No price yet"}</a></p>
+
+
+                                <p className="text-gray-500">{carDetail?.description || "No description"}</p>
+
+                                <div className="flex py-4 space-x-4">
+
+                                    <button onClick={() => seteditCar(true)} type="button" className="h-10 text-sm px-6 py-2 font-semibold rounded-md bg-indigo-600 hover:bg-indigo-500 text-white">
+                                        Edit Car
+                                    </button>
+                                    <button onClick={deleteCar} type="button" className="h-10 text-sm px-6 py-2 font-semibold rounded-md bg-red-600 hover:bg-red-500 text-white">
+                                    
+                                        {deleteIsLoading ? (
+                                            <ClipLoader size="20px" color="#fff"></ClipLoader>
                                         ) : (
                                             <>
-                                            {typeof(carDetail.images[0]) === 'object' ? (
-                                                <img src={carDetail.images[0]?.image_largeUrl} alt="" />
-                                            ) : (
-                                                <img src={carDetail.images[0]} alt="" />
-                                            )}
+                                            Delete Car
                                             </>
                                         )}
-                                    </div>
-
-                                </div>
-
-                                <div className="flex -mx-2 mb-4">
-                                    <template x-for="i in 4">
-                                    <div className="flex-1 px-2">
-                                        <button className="focus:outline-none w-full rounded-lg h-24 md:h-32 bg-gray-100 flex items-center justify-center">
-                                        <span x-text="i" className="text-2xl"></span>
-                                        </button>
-                                    </div>
-                                    </template>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div className="md:flex-1 px-4">
-                            <h2 className="mb-2 leading-tight tracking-tight font-semibold text-gray-800 text-xl md:text-3xl uppercase">{carDetail?.name || "No name"}</h2>
-                            <p className="text-gray-500 text-sm">VIN <a href="#" className="text-indigo-600 hover:underline">{carDetail?.vin}</a></p>
-                            <p className="text-gray-500 text-sm">Price <a href="#" className="text-indigo-600 hover:underline">{carDetail?.price ? `$${carDetail?.price}` : "No price yet"}</a></p>
-
-
-                            <p className="text-gray-500">{carDetail?.description || "No description"}</p>
-
-                            <div className="flex py-4 space-x-4">
-
-                                <button onClick={() => seteditCar(true)} type="button" className="h-14 px-6 py-2 font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white">
-                                    Edit Car
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-full mt-24 mx-auto">
-                        <div className="overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
-                            <table className="border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
-                               
-                                <tbody>
-                                    {/* <template> */}
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Make
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.make}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Model
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.model}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Year
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.year}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Vehicle Location
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.Vehicle_location}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Auction End Time
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.auctionEndTime}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Body Type
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.body_style}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Facilitation Location
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.facilitationLocation}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Doors
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.doors}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Exterior Color
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.exterior_color}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Interior Color
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.interior_color}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Interior Type
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.interior_type}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Passenger Capacity
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.passengerCapacity}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Transmission
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.transmission}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Engine Type
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.EngineType}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Vehicle Type
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.vehicle_type}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Seller City
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.sellerCity}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Odometer
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.odometer}</span>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Description
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.description}</span>
-                                            </td>
-                                           
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Bid Amount
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.bidAmount ? `$${carDetail?.bidAmount}` : ""}{carDetail?.bidAmount}</span>
-                                            </td>
-                                           
-                                            <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
-                                                <label
-                                                    className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
-                                                    {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
-                                                    Zip
-                                                </label>
-                                            </td>
-                                            <td className="border-dashed border-t border-gray-200 userId">
-                                                <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.zip}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                           
-                                        </tr>
-                                        <tr>
+                        <div className="w-full mt-24 mx-auto">
+                            <div className="overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
+                                <table className="border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
+                                
+                                    <tbody>
+                                        {/* <template> */}
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Make
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.make}</span>
+                                                </td>
                                             
-                                           
-                                        </tr>
-                                        
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Model
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.model}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Year
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.year}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Vehicle Location
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.Vehicle_location}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Auction End Time
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.auctionEndTime}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Body Type
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.body_style}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Facilitation Location
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.facilitationLocation}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Doors
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.doors}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Exterior Color
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.exterior_color}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Interior Color
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.interior_color}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Interior Type
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.interior_type}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Passenger Capacity
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.passengerCapacity}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Transmission
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.transmission}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Engine Type
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.EngineType}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Vehicle Type
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.vehicle_type}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Seller City
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.sellerCity}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Odometer
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.odometer}</span>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Description
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.description}</span>
+                                                </td>
+                                            
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Bid Amount
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.bidAmount ? `$${carDetail?.bidAmount}` : ""}{carDetail?.bidAmount}</span>
+                                                </td>
+                                            
+                                                <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
+                                                    <label
+                                                        className="text-teal-500 inline-flex justify-between items-center hover:bg-gray-200 px-2 py-2 rounded-lg cursor-pointer">
+                                                        {/* <input type="checkbox" className="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" /> */}
+                                                        Zip
+                                                    </label>
+                                                </td>
+                                                <td className="border-dashed border-t border-gray-200 userId">
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.zip}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            
+                                            </tr>
+                                            <tr>
+                                                
+                                            
+                                            </tr>
+                                            
 
-                                    {/* </template> */}
-                                </tbody>
-                            </table>
+                                        {/* </template> */}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
             ) : (
@@ -957,7 +1049,14 @@ function CarDetail() {
                         <hr />
 
                         <div className="w-full m-auto text-center mt-10"> 
-                            <button onClick={submitForm} type="button" className="bg-red-700 outline-none text-white mt-6 rounded-md text-sm px-4 py-2">Submit</button>
+                            <button onClick={submitForm} type="button" className="bg-red-700 outline-none text-white mt-6 rounded-md text-sm px-4 py-2">
+                            
+                            {isLoading ? (
+                                <ClipLoader color="#fff" size="20px"></ClipLoader>
+                            ) : (
+                                <>Submit</>
+                            )}
+                            </button>
                         </div>
                    </form>
                 </div>

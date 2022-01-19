@@ -466,7 +466,7 @@ const selectImages = (event) => {
       </div>
 
       <div className="flex flex-wrap">
-      {dealerCars && (
+      {dealerCars?.length ? (
         <>
           {dealerCars?.slice(0).reverse().map((car, index) => (
             <div key={index} className="bg-white inline-block shadow-md border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
@@ -519,6 +519,10 @@ const selectImages = (event) => {
           ))}
         </>
 
+      ) : (
+        <>
+          <p className="mt-10">No cars yet</p>
+        </>
       )}
 
       </div>

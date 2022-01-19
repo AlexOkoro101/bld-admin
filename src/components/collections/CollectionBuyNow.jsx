@@ -6,9 +6,9 @@ export const CollectionBuyNow = ({ buyNow }) => {
   const dollarFormatter = new Intl.NumberFormat();
   const addImage = (params) => {
     if (
-      params.images &&
-      params.images.length > 0 &&
-      params.images[0].image_smallUrl
+      params?.images &&
+      params?.images.length > 0 &&
+      params?.images[0].image_smallUrl
     ) {
       return (
         <div
@@ -18,9 +18,9 @@ export const CollectionBuyNow = ({ buyNow }) => {
           }}
           className=" bg-opacity-20  cursor-pointer rounded-md"
         >
-          {params.images[0] ? (
+          {params?.images[0] ? (
             <div
-              onClick={() => router.push(`/admin/auctions/buy-now/${params._id}`)}
+              onClick={() => router.push(`/admin/auctions/buy-now/${params?._id}`)}
               className="cursor-pointer relative block"
               style={{
                 width: '100%',
@@ -28,7 +28,7 @@ export const CollectionBuyNow = ({ buyNow }) => {
               }}
             >
               <img
-                src={`https://proxybuylike.herokuapp.com/?url=${params.images[0].image_largeUrl}`}
+                src={`https://proxybuylike.herokuapp.com/?url=${params?.images[0].image_largeUrl}`}
                 alt="hello"
                 className="w-full object-cover h-full rounded-md object-center"
               />
@@ -38,7 +38,7 @@ export const CollectionBuyNow = ({ buyNow }) => {
             </div>
           ) : (
             <div
-              onClick={() => router.push(`/admin/auctions/buy-now/${params._id}`)}
+              onClick={() => router.push(`/admin/auctions/buy-now/${params?._id}`)}
               className="cursor-pointer  "
               style={{
                 width: '100%',
@@ -48,7 +48,7 @@ export const CollectionBuyNow = ({ buyNow }) => {
               <div
                 onClick={() => {
                   console.log("ya")
-                  router.push(`/admin/auctions/buy-now/${params._id}`)}}
+                  router.push(`/admin/auctions/buy-now/${params?._id}`)}}
                 style={{
                   backgroundImage: `url(/img/Rectangle.png)`,
                 }}

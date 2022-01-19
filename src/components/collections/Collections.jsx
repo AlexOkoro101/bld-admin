@@ -10,6 +10,7 @@ import { CollectionBuyNow } from './CollectionBuyNow';
 export const Collections = () => {
   const dispatch = useDispatch();
   const selectedData = useSelector((state) => state.collection.collections);
+  console.log(selectedData)
   const [filteredData, setFilteredData] = useState(null);
   const [buyNow, setBuyNow] = useState(null);
   const [activeCard, setActiveCard] = useState(false);

@@ -3,10 +3,12 @@ import Cards from "../src/components/dashboard-cards";
 import { enviroment } from "../src/components/environment";
 import TransactionTable from "../src/components/tables/transaction-table"
 import ReactPaginate from 'react-paginate'
+import { ClipLoader} from "react-spinners";
 
 function HomePage() {
   const [transactions, settransactions] = useState(null);
   const [users, setusers] = useState(null)
+  const [isLoading, setisLoading] = useState(false)
 
 
   //Pagination
@@ -22,6 +24,7 @@ function HomePage() {
 
 
   const getTransactions = () => {
+    setisLoading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -30,6 +33,7 @@ function HomePage() {
     fetch(enviroment.BASE_URL + "transactions", requestOptions)
     .then(response => response.text())
     .then(result => {
+      setisLoading(false)
       const item = JSON.parse(result)
       console.log(item)
 
@@ -43,6 +47,7 @@ function HomePage() {
   }
 
   const fetchTransactions = (currentPage) => {
+    setisLoading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -51,6 +56,7 @@ function HomePage() {
     fetch(enviroment.BASE_URL + "transactions?page="  + currentPage, requestOptions)
     .then(response => response.text())
     .then(result => {
+      setisLoading(false)
       const item = JSON.parse(result)
       console.log(item)
 
@@ -76,6 +82,10 @@ function HomePage() {
     <div className="p-8 pl-24 flex flex-col gap-y-12">
       <Cards transactions={transactions} users={users}></Cards>
 
+
+      {isLoading ? (
+        <ClipLoader size="40px" color="#999"></ClipLoader>
+      ) : (
       <div className="trasactions">
         <p className="uppercase text-base mb-2 font-semibold">All Transactions</p>
         <TransactionTable transactions={transactions}></TransactionTable>
@@ -94,6 +104,8 @@ function HomePage() {
           activeClassName={'active'}
         ></ReactPaginate>
       </div>
+
+      )}
 
       
 
