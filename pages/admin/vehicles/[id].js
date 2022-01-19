@@ -293,7 +293,7 @@ function CarDetail() {
     }
 
     const submitForm = () => {
-
+        console.log(dateRange)
         setisLoading(true)
 
         var myHeaders = new Headers();
@@ -309,7 +309,7 @@ function CarDetail() {
             // images: selectedFiles,
             exterior_color : exteriorColor,
             vehicle_type:vehicleType,
-            auctionEndTime : auctionEndTime,
+            auctionEndTime : dateRange[0].endDate,
             interior_color:interiorColor,
             transmission:transmission ,
             fuel_type:fuelType,
