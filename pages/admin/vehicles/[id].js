@@ -119,7 +119,7 @@ function CarDetail() {
             redirect: 'follow'
         };
         
-        fetch(enviroment.BASE_URL + "vehicles/vin/" + carVIN, requestOptions)
+        fetch(enviroment.BASE_URL + "vehicles/" + carVIN, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
@@ -132,13 +132,13 @@ function CarDetail() {
     }
 
     const setformValues = (data) => {
-        setSelectedFiles(data.images)
+        setSelectedFiles(data?.images)
         
-        setMake(data.make)
+        setMake(data?.make)
 
-        setModel(data.model)
+        setModel(data?.model)
         makes.map((make, index) => {
-            if(make.name == data.make) {
+            if(make.name == data?.make) {
                 setModels(makes[index].models)
                 
             }
@@ -437,7 +437,7 @@ function CarDetail() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "vehicles/publish/61d2bb296db8d404b102f06b", requestOptions)
+        fetch(enviroment.BASE_URL + "vehicles/publish/" + carVIN, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
