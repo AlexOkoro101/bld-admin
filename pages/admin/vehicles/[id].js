@@ -69,6 +69,7 @@ function CarDetail() {
       const [viewPhoto, setViewPhoto] = useState([])
       const [selectedFiles, setSelectedFiles ] = useState([]);
       const [category, setCategory] = useState(null)
+      const [vehicleVIN, setvehicleVIN] = useState("")
 
 
 
@@ -180,6 +181,8 @@ function CarDetail() {
         setFacilitationLocation(data?.facilitationLocation)
 
         setVehicleLocation(data?.Vehicle_location)
+
+        setvehicleVIN(data?.vin)
 
     }
 
@@ -303,7 +306,6 @@ function CarDetail() {
             make :make,
             model:model,
             year :year,
-            vin: carVIN,
             name: `${year} ${make} ${model}`,
             price: price,
             // images: selectedFiles,
@@ -328,6 +330,7 @@ function CarDetail() {
             bidAmount:bidAmount,
             facilitationLocation:facilitationLocation,
             Vehicle_location:vehicleLocation,
+            vin: vehicleVIN
           }
 
           console.log(data)
@@ -504,8 +507,8 @@ function CarDetail() {
                                 </div>
                             </div>
                             <div className="md:flex-1 px-4">
-                                <h2 className="mb-2 leading-tight tracking-tight font-semibold text-gray-800 text-xl md:text-3xl uppercase">{carDetail?.name || "No name"}</h2>
-                                <p className="text-gray-500 text-sm">VIN <a href="#" className="text-indigo-600 hover:underline">{carDetail?.vin}</a></p>
+                                <h2 className="mb-2 leading-tight tracking-tight font-semibold text-gray-800 text-xl md:text-3xl uppercase">{carDetail?.name || "No name yet"}</h2>
+                                <p className="text-gray-500 text-sm">VIN <a href="#" className="text-indigo-600 hover:underline">{carDetail?.vin || "No vin yet"}</a></p>
                                 <p className="text-gray-500 text-sm">Price <a href="#" className="text-indigo-600 hover:underline">{carDetail?.price ? `$${carDetail?.price}` : "No price yet"}</a></p>
 
 
@@ -812,7 +815,10 @@ function CarDetail() {
 
             ) : (
                 <div>
-                   <p className="uppercase text-base mb-2 font-semibold">Edit Car</p>
+                    <div className="flex justify-between items-center">
+                        <p className="uppercase text-base mb-2 font-semibold">Edit Car</p>
+                        <button onClick={() => {seteditCar(false)}} type="button" className="h-10 mb-2 text-sm px-6 py-2 font-semibold rounded-md bg-blue-600 hover:bg-blue-500 text-white">Back</button>
+                    </div>
                    <form className="border border-gray-200 p-5 editcar">
                         <div className="flex gap-x-10 mb-10">
                             <div className="cursor-pointer hover:border-gray-300 w-40 h-40 group gap-y-5 border border-gray-200 p-5 flex flex-col justify-center items-center" onClick={uploadImages}>
@@ -840,6 +846,13 @@ function CarDetail() {
                         </div>
 
                         <hr />
+
+                        <div className="grid grid-cols-4 gap-4 mt-10">
+                            <div>
+                                <label>VIN</label>
+                                <input type="text" value={vehicleVIN} onChange={(e) => setvehicleVIN(e.target.value)} />
+                            </div>
+                        </div>
 
                         <div className="grid grid-cols-4 gap-4 mt-10">
                             <div className="">
@@ -1000,7 +1013,7 @@ function CarDetail() {
 
                         <div className="grid grid-cols-3 gap-4 mt-10 mb-10">
                             <div>
-                                <label>Trip Start</label>
+                                <label>Auction Date</label>
                                 <DateRange
                                     editableDateInputs={true}
                                     onChange={item => setdateRange([item.selection])}
