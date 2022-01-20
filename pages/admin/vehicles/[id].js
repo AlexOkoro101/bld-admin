@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { enviroment } from "../../../src/components/environment"
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -269,10 +269,10 @@ function CarDetail() {
     
           return(
             <div key={i} className="w-40 h-40 bg-gray-100">   
+                <div style={{height: "10%"}} className="overflow-hidden">
+                    <i className="fa fa-trash mr-1 cursor-pointer text-red-500 float-right z-50" onClick={() => deletePhoto(i)}></i>
+                </div>
                 <div className="relative p-1 w-full" style={{height: "90%"}} key={i}>
-                    <a onClick={() => deletePhoto(i)}>
-                        <i className="cursor-pointer fas fa-trash-alt text-red-500 float-right relative -top-1"></i>
-                    </a>
                     {typeof(photo) === 'object' ? (
                         <img src={photo?.image_largeUrl} alt="" key={photo?.image_largeUrl} className="h-full w-full" />
                       ) : (
@@ -286,13 +286,14 @@ function CarDetail() {
     };
 
     const deletePhoto = (id) => {
-        console.log(id)
+        // console.log(id)
 
+        
         selectedFiles.splice(id, 1)
-
-        // console.log(selectedFiles)
+        console.log(selectedFiles)
 
         setSelectedFiles(selectedFiles)
+        
     }
 
     const submitForm = () => {
@@ -330,7 +331,8 @@ function CarDetail() {
             bidAmount:bidAmount,
             facilitationLocation:facilitationLocation,
             Vehicle_location:vehicleLocation,
-            vin: vehicleVIN
+            vin: vehicleVIN,
+            images: selectedFiles
           }
 
           console.log(data)
