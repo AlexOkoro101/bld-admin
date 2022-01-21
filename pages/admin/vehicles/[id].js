@@ -188,11 +188,6 @@ function CarDetail() {
 
 
     const selectImages = (event) => {
-        // console.log(event)
-    
-        // event.preventDefault();
-      
-        // setIfImage(true)
         
         let photo1  = []
       
@@ -354,8 +349,12 @@ function CarDetail() {
             warranty: "  |  "
           }
 
+          if(photos.length) {
+              delete data.images
+          }
+
           console.log(data)
-          console.log(photos)
+        //   console.log(photos)
 
           const requestOptions = {
             method: 'POST',
@@ -418,9 +417,11 @@ function CarDetail() {
                     toast.success("Image Uploaded!");
                 })
                 .catch(error => console.log('error', error));
-
+            console.log("ran");
+            setisLoading(false)
         })
-
+        setPhotos([])
+            
   
     }
 
@@ -475,6 +476,7 @@ function CarDetail() {
                 setTimeout(() => {
                     router.push('/admin/vehicles')
                 }, 1000);
+
             }
         })
         .catch(error => console.log('error', error));
