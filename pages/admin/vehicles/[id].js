@@ -341,7 +341,7 @@ function CarDetail() {
             sourceEngineType: "4 Cylinder",
             sourceExteriorColor: "Black",
             sourceInteriorColor: "",
-            sourceSellerName: "PRECISE MOTORS LLC",
+            sourceSellerName: "Buylikedealers",
             sourceTopType: "",
             titleState: "",
             titleStatus: "Title Present",
@@ -490,7 +490,7 @@ function CarDetail() {
                     <div className="flex justify-end">
                         <button onClick={publishCar} type="button" className="h-10 text-sm px-6 py-2 font-semibold rounded-md bg-green-600 hover:bg-green-500 text-white">
                             {publishIsLoading ? (
-                                <ClipLoader></ClipLoader>
+                                <ClipLoader color="#fff" size="20px"></ClipLoader>
                             ) : (
                                 <>Publish Car</>
                             )}
