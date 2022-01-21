@@ -230,7 +230,20 @@ const BidDetails = () => {
 
   const d = new Date();
   const handleProcess = () => {
+    const datalist = document.getElementById('process')
+    const inputList = document.getElementById('process-select')
+    let step;
+
+    for (var i=0;i<datalist.options.length;i++) {
+      if (datalist.options[i].value == inputList.value) {
+          console.log(datalist.options[i]);
+          step = i;
+          break;
+      }
+    }
+    // console.log(step);
     const obj = {
+      _id: bidId,
       body: processStep,
       Updated_by: "617d0c0a3097a603b147a4d9",
       created_at: `${d}`,
@@ -246,6 +259,8 @@ const BidDetails = () => {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
+      message:processStep,
+      step: step,
       details: processDetails
     });
 

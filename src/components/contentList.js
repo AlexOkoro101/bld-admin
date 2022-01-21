@@ -10,6 +10,7 @@ const ContentList = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [showUpdateContent, setShowUpdateContent] = useState(false);
+  const [individualCar, setindividualCar] = useState(null)
   const selectedData = useSelector(
     (state) => state.collection.collectionDetail,
   );
@@ -19,6 +20,13 @@ const ContentList = () => {
     setModalContent(item);
     setShowModal(true);
   };
+
+  const assignValue = (item) => {
+    setindividualCar(item)
+    setTimeout(() => {
+      setShowUpdateContent(true)
+    }, 500);
+  }
 
   return (
     <>
@@ -32,6 +40,7 @@ const ContentList = () => {
         <UpdateCollection
           setShowUpdateContent={setShowUpdateContent}
           item={modalContent}
+          carDetail={individualCar}
         />
       )}
       {selectedData &&
@@ -119,7 +128,7 @@ const ContentList = () => {
                 "
                     onClick={() =>
                       router.push({
-                        pathname: '/admin/auctions/bid/' + item.vin,
+                        pathname: '/admin/auctions/bid/' + item._id,
                       })
                     }
                   >
@@ -139,7 +148,10 @@ const ContentList = () => {
                   md:text-sm
                   mt-2
                 "
-                    onClick={() => setShowUpdateContent(true)}
+                    onClick={() => {
+                      
+                      assignValue(item)
+                      }}
                   >
                     UPDATE
                   </button>

@@ -492,7 +492,7 @@ const selectImages = (event) => {
                     <p>{car.odometer ? (`${numberFormatter.format(car.odometer)} miles`) : "miles"}</p>
                   </div>
                   <div className="flex justify-between">
-                    <p className="font-normal text-sm text-gray-500">{car.Vehicle_location || "Location"}</p>
+                    <p className="font-normal text-sm text-gray-500">{car.pickupLocation || "Location"}</p>
                     <p style={{fontSize: "10px"}} className="font-normal text-gray-500">
                     {car.auctionEndTime ? (
                       new Date(car?.auctionEndTime).toLocaleDateString("en-NG",
@@ -506,7 +506,10 @@ const selectImages = (event) => {
                     </p>
                   </div>
                   <div className="flex justify-between mt-4">
-                    <p className="font-normal text-gray-500 mb-3 dark:text-gray-400 text-base">{car.price ? `$${numberFormatter.format(car.price)}` : "Price"}</p>
+                    <div className="flex flex-col">
+                      <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">BUY NOW {car.buyNowPrice ? `$${numberFormatter.format(car.buyNowPrice)}` : "N/A"}</p>
+                      <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">MMR {car.mmrPrice ? `$${numberFormatter.format(car.mmrPrice)}` : "N/A"}</p>
+                    </div>
                     <button style={{fontSize: "10px"}} onClick={() => router.push('/admin/vehicles/' + car._id)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-lg px-5 py-1 text-center inline-flex items-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         View
                         

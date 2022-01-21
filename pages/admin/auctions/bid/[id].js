@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import FsLightbox from 'fslightbox-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { enviroment } from '../../../../src/components/environment';
 
 const BidDetails = () => {
   var dollarFormatter = new Intl.NumberFormat();
@@ -16,8 +17,8 @@ const BidDetails = () => {
       draggable: true,
       progress: undefined,
     });
-  const toastSuccess = () =>
-    toast.success(`${message ? message : 'Success'}`, {
+  const docupload = () =>
+    toast.success('Upload Successful', {
       position: 'top-right',
       autoClose: 5000,
       hideProgressBar: true,
@@ -41,16 +42,17 @@ const BidDetails = () => {
   const [userId, setuserId] = useState(null);
   const [processDetails, setprocessDetails] = useState(null);
   const [processStep, setprocessStep] = useState("")
+  const [processstage, setprocessstage] = useState(0);
+
+
+  const [photos, setPhotos] = useState([])
+  const [photo, setPhoto] = useState([])
+  const [viewPhoto, setViewPhoto] = useState([])
+  const [selectedFiles, setSelectedFiles ] = useState([]);
 
   const router = useRouter();
   const bidId = router.query.id;
-  // const adjustHeight = () => {
-  //   const proccessBody = document.getElementsByClassName('tracker-table');
-  //   var proccessBodyHeight = proccessBody[0]?.offsetHeight;
-  //   console.log(proccessBodyHeight);
-  //   const processCircle = document.querySelector('.process-circle');
-  //   processCircle.style.setProperty('--height', `${proccessBodyHeight}px`);
-  // };
+  
 
   const retrieveData = () => {
     const userActive = localStorage.getItem('user');
@@ -86,7 +88,7 @@ const BidDetails = () => {
       .then((response) => response.text())
       .then((result) => {
         const newResult = JSON.parse(result);
-        console.log("new Result", newResult);
+        console.log("process Result", newResult);
         setprocessDetails(newResult?.data?.details);
         if(newResult?.data == null) {
           setprocessDetails([]);
@@ -100,7 +102,7 @@ const BidDetails = () => {
     return () => {
       retrieveData();
     };
-  }, [bidCollection]);
+  }, [bidCollection, processstage]);
 
   useEffect(() => {
     getProcessFlow();
@@ -113,7 +115,7 @@ const BidDetails = () => {
 
   useEffect(() => {
     // console.log(bidId);
-    fetch('https://buylinke.herokuapp.com/vehicles/vin/' + bidId, {
+    fetch('https://buylinke.herokuapp.com/vehicles/' + bidId, {
       method: 'GET',
       redirect: 'follow',
     })
@@ -133,7 +135,7 @@ const BidDetails = () => {
         console.log(bidCollection);
       })
       .catch((error) => console.log('error', error));
-  }, []);
+  }, [processstage]);
 
   useEffect(() => {
     displaySmall();
@@ -228,7 +230,20 @@ const BidDetails = () => {
 
   const d = new Date();
   const handleProcess = () => {
+    const datalist = document.getElementById('process')
+    const inputList = document.getElementById('process-select')
+    let step;
+
+    for (var i=0;i<datalist.options.length;i++) {
+      if (datalist.options[i].value == inputList.value) {
+          console.log(datalist.options[i]);
+          step = i;
+          break;
+      }
+    }
+    // console.log(step);
     const obj = {
+      _id: bidId,
       body: processStep,
       Updated_by: "617d0c0a3097a603b147a4d9",
       created_at: `${d}`,
@@ -244,6 +259,8 @@ const BidDetails = () => {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
+      message:processStep,
+      step: step,
       details: processDetails
     });
 
@@ -254,10 +271,58 @@ const BidDetails = () => {
       redirect: 'follow'
     };
 
-    fetch("https://buylinke.herokuapp.com/process/add/" + bidCollection?._id, requestOptions)
+    fetch("https://buylinke.herokuapp.com/process/vehicle/" + bidCollection?._id, requestOptions)
     .then(response => response.text())
-    .then(result => console.log(result))
+    .then(result => {
+        console.log(result)
+        const item = JSON.parse(result)
+        if(item.error == false) {
+            setprocessstage(processstage + 1)
+        }
+    })
     .catch(error => console.log('error', error));
+  }
+
+  const selectImages = (event) => {
+    // console.log(event.target.files)
+    setPhotos(event.target.files)
+  }
+
+  const handleDoc = () => {
+    const id = bidCollection?._id;
+    console.log("photos", photos)
+    
+
+    for(const photo of photos) {
+      
+      var formdata = new FormData();
+      formdata.append('file', photo)
+      formdata.append('vehicle', true);
+      formdata.append('vehicle',  id);
+      formdata.append('document_name', photo.name)
+  
+      var requestOptions = {
+          method: 'POST',
+          body: formdata,
+          redirect: 'follow',
+          mode: 'no-cors'
+          
+      };
+  
+      console.log('done formData---------->', formdata );
+      console.log(photo)
+        
+        fetch(enviroment.BASE_URL + "vehicles/uploads/image", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+              console.log(result)
+              docupload()
+          })
+          .catch(error => console.log('error', error));
+    }
+    
+
+    
   }
 
   return (
@@ -277,24 +342,26 @@ const BidDetails = () => {
                   <div className="car-holder grid grid-cols-6 lg:grid-cols-1 items-center  gap-6 md:gap-3 lg:gap-1  py-2.5">
                     <span className="col-span-3 inline-block overflow-hidden rounded-md">
                       <img
-                        className="w-40"
+                        className="w-64"
                         src={bidCollection?.images[0]?.image_largeUrl}
                         alt=""
                       />
                     </span>
                     <div className="col-span-3">
-                      <p className="md:text-sm  lg:mt-3 primary-black font-medium font-10 uppercase">
+                      <p className="text-base lg:mt-3 primary-black font-medium uppercase">
                         {`${bidCollection?.name}` ||
                           `${bidCollection?.year} ${bidCollection?.make} ${bidCollection?.model}`}
                       </p>
-                      <p className="primary-black font-medium py-1 text-xs uppercase">
-                        {dollarFormatter.format(bidCollection?.odometer)} mi
-                      </p>
-                      <p className="primary-black font-medium text-xs uppercase">
+                      {bidCollection?.odometer && (
+                        <p className="primary-black font-medium py-1 text-sm uppercase">
+                            {dollarFormatter.format(bidCollection?.odometer)} mi
+                        </p>
+                      )}
+                      <p className="primary-black font-medium text-sm uppercase">
                         vin: {bidCollection?.vin}
                       </p>
-                      <p className="primary-black font-medium font-11 uppercase">
-                        {dollarFormatter.format(bidCollection?.price)}
+                      <p className="primary-black font-medium text-xs uppercase">
+                        ${dollarFormatter.format(bidCollection?.price)}
                       </p>
                     </div>
                   </div>
@@ -304,10 +371,10 @@ const BidDetails = () => {
                       {bidCollection?.trucking &&
                       bidCollection?.trucking !== '0' ? (
                         <tr className="detail-row mb-2">
-                          <td className="sec-black text-xs font-semibold py-1.5">
+                          <td className="sec-black text-sm font-semibold py-1.5">
                             Trucking
                           </td>
-                          <td className="text-xs primary-black font-normal py-1.5">
+                          <td className="text-sm primary-black font-normal py-1.5">
                             ${bidCollection?.trucking || 0}
                           </td>
                         </tr>
@@ -318,56 +385,56 @@ const BidDetails = () => {
                       {bidCollection?.shipping &&
                         bidCollection?.shipping !== '0' && (
                           <tr className="detail-row mb-2">
-                            <td className="sec-black text-xs font-semibold py-1.5">
+                            <td className="sec-black text-sm font-semibold py-1.5">
                               Shipping
                             </td>
-                            <td className="text-xs primary-black font-normal py-1.5">
+                            <td className="text-sm primary-black font-normal py-1.5">
                               ${bidCollection?.shipping || 0}
                             </td>
                           </tr>
                         )}
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Clearing
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           N/A
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Auction Fee
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           $450
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Service Fee
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           $400
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2 ">
-                        <td className="total-border sec-black text-xs font-semibold py-1.5 ">
+                        <td className="total-border sec-black text-sm font-semibold py-1.5 ">
                           Total
                         </td>
-                        <td className="total-border text-xs primary-black font-normal py-1.5 ">
+                        <td className="total-border text-sm primary-black font-normal py-1.5 ">
                           {bidCollection?.bidAmount}
                         </td>
                       </tr>
 
                       <tr className="detail-row mb-2">
-                        <td className="sec-black text-xs font-semibold py-1.5">
+                        <td className="sec-black text-sm font-semibold py-1.5">
                           Deposit
                         </td>
-                        <td className="text-xs primary-black font-normal py-1.5">
+                        <td className="text-sm primary-black font-normal py-1.5">
                           $1,000
                         </td>
                       </tr>
@@ -381,8 +448,9 @@ const BidDetails = () => {
                       <p className="font-semibold text-sm py-5 px-2">
                         Bid Tracker
                       </p>
-                      <div className="mb-4">
-                          <select name="process-select" className="w-full border border-gray-400 rounded-lg p-2 text-sm outline-none text-gray-600" id="process-select" value={processStep} onChange={(e) => setprocessStep(e.target.value)}>
+                      <div className="mb-9">
+                          <input type="text" list="process" name="process-select" className="w-full border border-gray-400 rounded-lg p-2 text-sm outline-none text-gray-600" id="process-select" value={processStep} onChange={(e) => setprocessStep(e.target.value)} />
+                          <datalist id="process">
                             <option>Choose process step</option>
                             <option value="You placed a bid for...">You placed a bid for...</option>
                             <option value="Your bid has been won and is awaiting balance payment.">Your bid has been won and is awaiting balance payment.</option>
@@ -392,7 +460,7 @@ const BidDetails = () => {
                             <option value="Your car has been shipped to Nigeria and is awaiting clearance at the port.">Your car has been shipped to Nigeria and is awaiting clearance at the port.</option>
                             <option value="Your car has been cleared at the port and is awaiting delivery or pickup.">Your car has been cleared at the port and is awaiting delivery or pickup.</option>
                             <option value="Your car has been delivered.">Your car has been delivered.</option>
-                          </select>
+                          </datalist>
                           <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleProcess}>Submit</button>
                       </div>
                       {processDetails ? (
@@ -401,7 +469,7 @@ const BidDetails = () => {
                             {processDetails?.map((process) => (
                               <tbody
                                 key={process._id}
-                                className="process-body flex items-center jus mb-2 mt-8 lg:mt-11"
+                                className="process-body flex items-center border-b pb-4 mb-4"
                               >
                                 <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
                                   <td>
@@ -425,8 +493,8 @@ const BidDetails = () => {
                                     </small>
                                   </td>
                                 </tr>
-                                <tr className=" mb-3 ">
-                                  <td className="process-circle circle"></td>
+                                <tr className="">
+                                  <td className="process-circle circle w-px bg-gray-300 h-8"></td>
                                 </tr>
                                 <tr>
                                   <td className=" pl-4 mb-3 leading-4 w-44 md:w-72">
@@ -610,10 +678,11 @@ const BidDetails = () => {
                         Vehicle Documents
                       </p>
                       <div className="doc-upload">
-                          <input type="file" className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" />
-                          <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleProcess}>Submit</button>
+                          <input type="file" multiple className="border border-gray-400 text-gray-600 rounded-lg w-full p-1 text-sm" name="doc" id="doc" onChange={(e) => selectImages(e)} />
+                          <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleDoc}>Submit</button>
                       </div>
-                      <div className="pb-10 border mt-2">
+                      {bidCollection?.documents.length > 0 && (
+                      <div className="pb-10 border mt-2"> 
                         <div className="download-file w-full md:w-72 flex justify-between items-center bg-white px-5 py-4">
                           <div className="flex items-center">
                             <div className="mr-4">
@@ -695,6 +764,8 @@ const BidDetails = () => {
                           </div>
                         </div>
                       </div>
+
+                      )}
                     </div>
                   </div>
                 </section>

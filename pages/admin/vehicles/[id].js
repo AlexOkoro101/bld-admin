@@ -148,11 +148,11 @@ function CarDetail() {
 
         setYear(data?.year)
 
-        setExteriorColor(data?.exterior_color)
+        setExteriorColor(data?.exteriorColor)
 
-        setVehicleType(data?.vehicle_type)
+        setVehicleType(data?.vehicleType)
 
-        setInteriorColor(data?.interior_color)
+        setInteriorColor(data?.interiorColor)
 
         setTransmission(data?.transmission)
 
@@ -166,7 +166,7 @@ function CarDetail() {
 
         setPassengerCapacity(data?.passengerCapacity)
 
-        setPrice(data?.price)
+        setPrice(data?.buyNowPrice)
 
         setSellerCity(data?.sellerCity)
 
@@ -174,15 +174,15 @@ function CarDetail() {
 
         setDescription(data?.description)
 
-        setBidAmount(data?.bidAmount)
+        setBidAmount(data?.mmrPrice)
 
-        setZip(data?.zip)
+        setZip(data?.locationFullZipcode)
 
         setFacilitationLocation(data?.facilitationLocation)
 
-        setVehicleLocation(data?.Vehicle_location)
+        setVehicleLocation(data?.pickupLocation)
 
-        setvehicleVIN(data?.vin)
+        setvehicleVIN(data?.VIN)
 
     }
 
@@ -308,12 +308,12 @@ function CarDetail() {
             model:model,
             year :year,
             name: `${year} ${make} ${model}`,
-            price: price,
+            buyNowPrice: price,
             // images: selectedFiles,
-            exterior_color : exteriorColor,
-            vehicle_type:vehicleType,
+            exteriorColor : exteriorColor,
+            vehicleType:vehicleType,
             auctionEndTime : dateRange[0].endDate,
-            interior_color:interiorColor,
+            interiorColor:interiorColor,
             transmission:transmission ,
             fuel_type:fuelType,
             odometer:odometer,
@@ -321,18 +321,37 @@ function CarDetail() {
             equipment:equipment,
             EngineType:EngineType,
             interior_type:interiorType,
-            body_style:bodyStyle,
+            bodyType:bodyStyle,
             passengerCapacity:passengerCapacity,
             sellerCity:sellerCity,
             description:description,
-            company:"buylikedealers",
+            companyName:"buylikedealers",
+            contactEmail: null,
+            contactName: null,
+            contactPhone: null,
             dealers:true,
-            Zip:zip,
-            bidAmount:bidAmount,
+            locationFullZipcode:zip,
+            mmrPrice:bidAmount,
             facilitationLocation:facilitationLocation,
-            Vehicle_location:vehicleLocation,
-            vin: vehicleVIN,
-            images: selectedFiles
+            pickupLocation:vehicleLocation,
+            VIN: vehicleVIN,
+            images: selectedFiles,
+            driveTrain: "2 Wheel Drive",
+            mileage: odometer,
+            msrp: "",
+            sellerPhone: "(740) 954-3877",
+            sellerRating: "5",
+            sellerState: "OH",
+            sourceEngineFuelType: "Gasoline",
+            sourceEngineType: "4 Cylinder",
+            sourceExteriorColor: "Black",
+            sourceInteriorColor: "",
+            sourceSellerName: "PRECISE MOTORS LLC",
+            sourceTopType: "",
+            titleState: "",
+            titleStatus: "Title Present",
+            vehicleName: `${year} ${make} ${model}`,
+            warranty: "  |  "
           }
 
           console.log(data)
@@ -510,8 +529,9 @@ function CarDetail() {
                             </div>
                             <div className="md:flex-1 px-4">
                                 <h2 className="mb-2 leading-tight tracking-tight font-semibold text-gray-800 text-xl md:text-3xl uppercase">{carDetail?.name || "No name yet"}</h2>
-                                <p className="text-gray-500 text-sm">VIN <a href="#" className="text-indigo-600 hover:underline">{carDetail?.vin || "No vin yet"}</a></p>
-                                <p className="text-gray-500 text-sm">Price <a href="#" className="text-indigo-600 hover:underline">{carDetail?.price ? `$${carDetail?.price}` : "No price yet"}</a></p>
+                                <p className="text-gray-500 text-sm">VIN <a href="#" className="text-indigo-600 hover:underline">{carDetail?.VIN || "No vin yet"}</a></p>
+                                <p className="text-gray-500 text-sm">Buy now price <a href="#" className="text-indigo-600 hover:underline">{carDetail?.buyNowPrice ? `$${carDetail?.buyNowPrice}` : "No price yet"}</a></p>
+                                <p className="text-gray-500 text-sm">MMR price <a href="#" className="text-indigo-600 hover:underline">{carDetail?.mmrPrice ? `$${carDetail?.mmrPrice}` : "No price yet"}</a></p>
 
 
                                 <p className="text-gray-500">{carDetail?.description || "No description"}</p>
@@ -586,7 +606,7 @@ function CarDetail() {
                                                     </label>
                                                 </td>
                                                 <td className="border-dashed border-t border-gray-200 userId">
-                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.Vehicle_location}</span>
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.pickupLocation}</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -612,7 +632,7 @@ function CarDetail() {
                                                     </label>
                                                 </td>
                                                 <td className="border-dashed border-t border-gray-200 userId">
-                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.body_style}</span>
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.bodyType}</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -653,7 +673,7 @@ function CarDetail() {
                                                     </label>
                                                 </td>
                                                 <td className="border-dashed border-t border-gray-200 userId">
-                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.exterior_color}</span>
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.exteriorColor}</span>
                                                 </td>
                                             
                                                 <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
@@ -664,7 +684,7 @@ function CarDetail() {
                                                     </label>
                                                 </td>
                                                 <td className="border-dashed border-t border-gray-200 userId">
-                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.interior_color}</span>
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.interiorColor}</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -731,7 +751,7 @@ function CarDetail() {
                                                     </label>
                                                 </td>
                                                 <td className="border-dashed border-t border-gray-200 userId">
-                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.vehicle_type}</span>
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.vehicleType}</span>
                                                 </td>
                                             
                                                 <td className="border-dashed border-t border-gray-200 bg-gray-100 px-3">
@@ -794,7 +814,7 @@ function CarDetail() {
                                                     </label>
                                                 </td>
                                                 <td className="border-dashed border-t border-gray-200 userId">
-                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.zip}</span>
+                                                    <span className="text-gray-700 px-6 py-3 flex items-center">{carDetail?.locationFullZipcode}</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -852,7 +872,7 @@ function CarDetail() {
                         <div className="grid grid-cols-4 gap-4 mt-10">
                             <div>
                                 <label>VIN</label>
-                                <input type="text" value={vehicleVIN} onChange={(e) => setvehicleVIN(e.target.value)} />
+                                <input type="text" defaultValue={vehicleVIN} onChange={(e) => setvehicleVIN(e.target.value)} />
                             </div>
                         </div>
 
@@ -1026,7 +1046,7 @@ function CarDetail() {
 
                             <div className="flex flex-col gap-y-10">
                                 <div>
-                                    <label>Price</label>
+                                    <label>Buy Now Price</label>
                                     <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
                                 </div>
                                 <div className="">
@@ -1034,7 +1054,7 @@ function CarDetail() {
                                     <input type="number" value={odometer} onChange={(e) => setOdometer(e.target.value)} />
                                 </div>
                                 <div className="">
-                                    <label>Bid Amount</label>
+                                    <label>MMR Price</label>
                                     <input type="number" value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} />
                                 </div>
                                 <div className="">
