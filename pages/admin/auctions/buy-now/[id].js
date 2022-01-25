@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FsLightbox from 'fslightbox-react';
+import { ClipLoader} from "react-spinners";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { enviroment } from '../../../../src/components/environment';
@@ -229,6 +230,23 @@ const BidDetails = () => {
   var nairaFormatter = new Intl.NumberFormat();
 
   const d = new Date();
+  const checkProcess = () => {
+    setisLoading(true)
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(enviroment.BASE_URL + "process/check/" + bidCollection?._id, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if(result.error == false || result.status == true) {
+          handleProcess()
+        }
+      })
+      .catch(error => console.log('error', error));
+  }
   const handleProcess = () => {
     const datalist = document.getElementById('process')
     const inputList = document.getElementById('process-select')
@@ -271,13 +289,15 @@ const BidDetails = () => {
       redirect: 'follow'
     };
 
-    fetch("https://buylinke.herokuapp.com/process/vehicle/" + bidCollection?._id, requestOptions)
+    fetch(enviroment.BASE_URL + "process/vehicle/" + bidCollection?._id, requestOptions)
     .then(response => response.text())
     .then(result => {
         console.log(result)
         const item = JSON.parse(result)
         if(item.error == false) {
             setprocessstage(processstage + 1)
+            setisLoading(false)
+            toast.success("Process added!")
         }
     })
     .catch(error => console.log('error', error));
@@ -461,14 +481,21 @@ const BidDetails = () => {
                             <option value="Your car has been cleared at the port and is awaiting delivery or pickup.">Your car has been cleared at the port and is awaiting delivery or pickup.</option>
                             <option value="Your car has been delivered.">Your car has been delivered.</option>
                           </datalist>
-                          <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={handleProcess}>Submit</button>
+                          <button className="bg-red-700 text-white mt-2 rounded-md text-sm px-3 py-1" onClick={checkProcess}>
+                          
+                          {isLoading ? (
+                            <ClipLoader color="#fff" size="20px"></ClipLoader>
+                          ) : (
+                            <>Submit</>
+                          )}
+                          </button>
                       </div>
                       {processDetails ? (
                         <>
                           <table className="tracker-table">
-                            {processDetails?.map((process) => (
+                            {processDetails?.map((process, index) => (
                               <tbody
-                                key={process._id}
+                                key={index}
                                 className="process-body flex items-center border-b pb-4 mb-4"
                               >
                                 <tr className="pr-4 mb-3  md:text-right leading-3 md:mb-0">
