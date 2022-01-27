@@ -64,20 +64,21 @@ const ContentList = () => {
             <div className="md:h-full   w-full p-2 flex flex-col justify-between">
               <div className="flex justify-between">
                 <div>
-                  <div>
-                    <span className="text-xs md:text-sm font-semibold text-letters mr-4">
-                      {item.year}
-                    </span>
-                    <span className="text-xs md:text-sm font-semibold text-letters mx-3">
-                      {item.make}
-                    </span>
-                  </div>
+                  
                   <div className="my-1">
                     <span className="text-xs md:text-sm font-semibold text-letters">
                       {item.name}
                     </span>
                     <span className="text-xs md:text-sm block font-normal text-letters mt-1">
-                      {item.createdAt}
+                      {
+                      new Date(item.createdAt).toLocaleDateString("en-NG",
+                                {
+                                    year: "numeric",
+                                    day: "numeric",
+                                    month: "long",
+                                }
+                            )
+                      }
                     </span>
                   </div>
                   <div>
@@ -99,7 +100,7 @@ const ContentList = () => {
                     Authorized Bid
                   </span>
                   <span className="text-xs md:text-sm block font-semibold text-letters mr-4">
-                    ${item.bidAmount}
+                    ${item.bidAmount || "0"}
                   </span>
                 </div>
               </div>
