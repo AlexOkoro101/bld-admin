@@ -5,6 +5,7 @@ import { getCollectionDetail } from '../../../redux/actions/collection';
 import { useDispatch } from 'react-redux';
 
 export const CollectionCard = ({ filteredData }) => {
+
   //
   const router = useRouter();
   const dispatch = useDispatch();
@@ -85,7 +86,19 @@ export const CollectionCard = ({ filteredData }) => {
                   ele.vehicles.length > 1 ? 's' : ''
                 } selected`}
               </p>
-              <p className="text-letters text-xs">$10000 deposit paid</p>
+              <div>
+                <p className="text-letters text-xs">$1,000 deposit paid</p>
+                <p className=" text-xs mt-2">
+                {new Date(ele.createdAt).toLocaleDateString("en-NG",
+                    {
+                        year: "numeric",
+                        day: "numeric",
+                        month: "long",
+                    }
+                )}</p>
+
+              </div>
+
             </div>
             {displaySmall(ele)}
           </div>

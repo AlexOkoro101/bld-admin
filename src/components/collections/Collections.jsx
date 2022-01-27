@@ -16,6 +16,7 @@ export const Collections = () => {
   const [buyNow, setBuyNow] = useState(null);
   const [activeCard, setActiveCard] = useState(false);
   const [totalPage, settotalPage] = useState(0)
+  const [buyNowTotalPage, setbuyNowTotalPage] = useState(0)
   //
   useEffect(() => {
     let data = selectedData.data.filter((item) => item.vehicles.length > 0);
@@ -36,6 +37,7 @@ export const Collections = () => {
         const dada = JSON.parse(res);
         if (dada) {
           setBuyNow(dada.data);
+          setbuyNowTotalPage(dada.total)
           console.log(dada.data);
         }
       })
@@ -50,6 +52,36 @@ export const Collections = () => {
     let currentPage = data.selected
 
     dispatch(fetchCollections(currentPage));
+  }
+
+  const handlePageChangeBN = (data) => {
+    console.log(data.selected)
+
+    let currentPage = data.selected
+
+    fetchBN(currentPage);
+  }
+
+  const fetchBN = (pageNumber) => {
+    fetch(`https://buylinke.herokuapp.com/bids/buy-now/bid?page=` + pageNumber, {
+      method: 'GET',
+      headers: {},
+      credentials: 'same-origin',
+    })
+      .then(function (response) {
+        return response.text();
+      })
+      .then(function (res) {
+        const dada = JSON.parse(res);
+        if (dada) {
+          setBuyNow(dada.data);
+          setbuyNowTotalPage(dada.total)
+          console.log(dada.data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
   //
   return (
@@ -85,7 +117,23 @@ export const Collections = () => {
         ></ReactPaginate>
         </>
       ) : (
-        <CollectionBuyNow buyNow={buyNow} />
+        <>
+          <CollectionBuyNow buyNow={buyNow} />
+          <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          pageCount={buyNowTotalPage}
+          onPageChange={handlePageChangeBN}
+          containerClassName={'pagination justify-center'}
+          pageClassName={'page-item'}
+          pageLinkClassName={'page-link'}
+          previousClassName={'page-item'}
+          nextClassName={'page-item'}
+          nextLinkClassName={'page-link'}
+          previousLinkClassName={'page-link'}
+          activeClassName={'active'}
+        ></ReactPaginate>
+        </>
       )}
     </div>
   );

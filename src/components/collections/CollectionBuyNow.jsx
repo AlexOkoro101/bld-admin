@@ -117,7 +117,7 @@ export const CollectionBuyNow = ({ buyNow }) => {
 
                   {/* Vehicle Location here */}
                   <div className="pt-1.5">
-                    <p className="text-sm flex items-center sec-black font-normal">
+                    <div className="text-sm flex items-center sec-black font-normal">
                      
                       <p className="">
                         {/* {ele.vehicle?.facilitationLocation.replace(
@@ -126,7 +126,7 @@ export const CollectionBuyNow = ({ buyNow }) => {
                         )} */}
                         {ele.vehicle?.name}
                       </p>
-                    </p>
+                    </div>
                   </div>
                     <div className="ml-auto mt-2 flex self-center">
                      
@@ -145,11 +145,22 @@ export const CollectionBuyNow = ({ buyNow }) => {
                     </div>
 
                   {/* Vehicle Year here */}
-                  <p className=" text-xs sec-black font-11 flex justify-between w-full  items-center pt-1.5 ">
+                  <p className=" text-xs sec-black font-11 flex justify-between w-full flex-col pt-1.5 ">
                     {ele?.owner?.email}
                     <span className="">
                       {ele?.owner?.profile?.phoneNumber}{' '}
                     </span>
+                  </p>
+
+                  <p className=" text-xs sec-black flex justify-end mt-2 font-semibold">
+                      {new Date(ele?.createdAt).toLocaleDateString(
+                          'en-NG',
+                          {
+                            year: 'numeric',
+                            day: 'numeric',
+                            month: 'long',
+                          },
+                        )}
                   </p>
 
                   {/* Vehicle Price */}
