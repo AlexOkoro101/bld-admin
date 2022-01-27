@@ -468,7 +468,7 @@ const selectImages = (event) => {
       <div className="flex flex-wrap">
       {dealerCars?.length ? (
         <>
-          {dealerCars?.slice(0).reverse().map((car, index) => (
+          {dealerCars?.map((car, index) => (
             <div key={index} className="bg-white inline-block shadow-md border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
               <a href="#">
                   {!car.images.length ? (
