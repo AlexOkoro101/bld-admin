@@ -62,7 +62,7 @@ export const CollectionCard = ({ filteredData }) => {
   return (
     <>
       {filteredData !== null &&
-        filteredData?.slice(0).reverse().map((ele, id) => (
+        filteredData?.map((ele, id) => (
           <div key={id} className="bg-white border p-4 rounded my-3">
             <div className="flex justify-between items-center">
               <CustomButton
