@@ -30,7 +30,38 @@ export const getCollections = () => (dispatch) => {
     .then((data) => {
       dispatch({
         type: GET_COLLECTION_SUCCESS,
-        payload: data.data,
+        payload: data,
+      });
+    })
+    .catch(function (error) {
+      dispatch({
+        type: GET_COLLECTION_FAILED,
+        payload: error.message,
+      });
+      console.log(error);
+    });
+};
+
+export const fetchCollections = (pageNumber) => (dispatch) => {
+  dispatch({
+    type: GET_COLLECTION,
+  });
+  fetch(api + 'collections?page=' + pageNumber, {
+    method: 'GET',
+    redirect: 'follow',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then((data) => {
+      dispatch({
+        type: GET_COLLECTION_SUCCESS,
+        payload: data,
       });
     })
     .catch(function (error) {

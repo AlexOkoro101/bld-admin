@@ -2,9 +2,10 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CustomButton } from '../utils/Button';
 import { useEffect, useState } from 'react';
-import { getCollections } from '../../../redux/actions/collection';
+import { getCollections, fetchCollections } from '../../../redux/actions/collection';
 import { CollectionCard } from './CollectionCard';
 import { CollectionBuyNow } from './CollectionBuyNow';
+import ReactPaginate from 'react-paginate'
 //
 //
 export const Collections = () => {
@@ -14,9 +15,11 @@ export const Collections = () => {
   const [filteredData, setFilteredData] = useState(null);
   const [buyNow, setBuyNow] = useState(null);
   const [activeCard, setActiveCard] = useState(false);
+  const [totalPage, settotalPage] = useState(0)
   //
   useEffect(() => {
-    let data = selectedData.filter((item) => item.vehicles.length > 0);
+    let data = selectedData.data.filter((item) => item.vehicles.length > 0);
+    settotalPage(selectedData.total)
     setFilteredData(data);
   }, [selectedData]);
   useEffect(() => {
@@ -40,6 +43,14 @@ export const Collections = () => {
         console.log(error);
       });
   }, []);
+
+  const handlePageChange = (data) => {
+    console.log(data.selected)
+
+    let currentPage = data.selected
+
+    dispatch(fetchCollections(currentPage));
+  }
   //
   return (
     <div className="md:pt-8 w-full p-8 md:pl-24 bg-customBg pb-24">
@@ -56,7 +67,23 @@ export const Collections = () => {
         />
       </div>
       {activeCard === false ? (
-        <CollectionCard filteredData={filteredData ? filteredData : null} />
+        <>
+          <CollectionCard filteredData={filteredData ? filteredData : null} />
+          <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          pageCount={totalPage}
+          onPageChange={handlePageChange}
+          containerClassName={'pagination justify-center'}
+          pageClassName={'page-item'}
+          pageLinkClassName={'page-link'}
+          previousClassName={'page-item'}
+          nextClassName={'page-item'}
+          nextLinkClassName={'page-link'}
+          previousLinkClassName={'page-link'}
+          activeClassName={'active'}
+        ></ReactPaginate>
+        </>
       ) : (
         <CollectionBuyNow buyNow={buyNow} />
       )}
