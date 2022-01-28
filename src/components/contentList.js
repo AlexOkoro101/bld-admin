@@ -135,27 +135,30 @@ const ContentList = () => {
                   >
                     View Details
                   </button>
-                  <button
-                    className="
-                  text-white
-                  bg-green-500
-                  border-0
-                  py-2
-                  px-4
-                  focus:outline-none
-                  hover:bg-green-600
-                  rounded
-                  text-xs
-                  md:text-sm
-                  mt-2
-                "
-                    onClick={() => {
-                      
-                      assignValue(item)
-                      }}
-                  >
-                    UPDATE
-                  </button>
+                  {selectedData.bids[id].confirmed == false && (
+                    <button
+                      className="
+                    text-white
+                    bg-green-500
+                    border-0
+                    py-2
+                    px-4
+                    focus:outline-none
+                    hover:bg-green-600
+                    rounded
+                    text-xs
+                    md:text-sm
+                    mt-2
+                  "
+                      onClick={() => {
+                        
+                        assignValue(item)
+                        }}
+                    >
+                      UPDATE
+                    </button>
+
+                  )}
                 </div>
               </div>
             </div>

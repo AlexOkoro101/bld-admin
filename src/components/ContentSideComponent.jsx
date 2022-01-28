@@ -44,9 +44,9 @@ const ContentSideComponent = () => {
         <Tab className="transition-all text-xs md:text-sm delay-400 cursor-pointer mr-5 ease-in-out inline ">
           {selectedData.bids.length} Auctions
         </Tab>
-        <Tab className="transition-all text-xs md:text-sm delay-400 cursor-pointer mx-5 ease-in-out inline ">
+        {/* <Tab className="transition-all text-xs md:text-sm delay-400 cursor-pointer mx-5 ease-in-out inline ">
           25 Auctions
-        </Tab>
+        </Tab> */}
       </TabList>
       <TabPanel>
         <div>
@@ -73,9 +73,9 @@ const ContentSideComponent = () => {
         </div>
         <TimeTrail />
       </TabPanel>
-      <TabPanel>
+      {/* <TabPanel>
         <h2>Any content 4</h2>
-      </TabPanel>
+      </TabPanel> */}
     </Tabs>
   );
 };
