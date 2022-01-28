@@ -482,12 +482,47 @@ function CarDetail() {
         .catch(error => console.log('error', error));
     }
 
+    const unpublishCar = () => {
+        setpublishIsLoading(true)
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "publish": false
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch(enviroment.BASE_URL + "vehicles/publish/" + carVIN, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            setpublishIsLoading(false)
+
+            if(result.error == false) {
+                toast.success("Vehicle Published")
+                setTimeout(() => {
+                    router.push('/admin/vehicles')
+                }, 1000);
+
+            }
+        })
+        .catch(error => console.log('error', error));
+    }
+
     return (
         <div className="p-8 pl-24">
         <ToastContainer />
             {!editCar ? (
                 <div>
                     <div className="flex justify-end">
+                    {carDetail?.publish == false ? (
                         <button onClick={publishCar} type="button" className="h-10 text-sm px-6 py-2 font-semibold rounded-md bg-green-600 hover:bg-green-500 text-white">
                             {publishIsLoading ? (
                                 <ClipLoader color="#fff" size="20px"></ClipLoader>
@@ -496,6 +531,17 @@ function CarDetail() {
                             )}
                             
                         </button>
+
+                    ) : (
+                        <button onClick={unpublishCar} type="button" className="h-10 text-sm px-6 py-2 font-semibold rounded-md bg-yellow-600 hover:bg-yellow-500 text-white">
+                            {publishIsLoading ? (
+                                <ClipLoader color="#fff" size="20px"></ClipLoader>
+                            ) : (
+                                <>Unpublish Car</>
+                            )}
+                            
+                        </button>
+                    )}
                     </div>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 border p-8">
                         <div className="flex flex-col md:flex-row -mx-4">
