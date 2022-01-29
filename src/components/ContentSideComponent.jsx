@@ -9,6 +9,7 @@ import FsLightbox from 'fslightbox-react';
 import { UpdateCollection } from './collections/UpdateCollection';
 import { useRouter } from 'next/router';
 
+
 const ContentSideComponent = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);

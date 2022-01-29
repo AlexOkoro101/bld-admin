@@ -119,7 +119,7 @@ const LogIn = ({ beginLogin }) => {
 
   return (
     <>
-      <section className="absolute font-montserrat mt-16 top-0 right-0 bottom-0 left-0">
+      <section className="font-montserrat">
         {/* <Meta /> */}
         <main>
           <ToastContainer />
@@ -133,7 +133,7 @@ const LogIn = ({ beginLogin }) => {
             }}
           >
             <div className="flex w-full h-full items-center justify-center">
-              <div className="bg-white mb-16 w-full md:w-1/3 shadow-md rounded-md p-12">
+              <div className="bg-white mb-16 w-full md:w-1/3 shadow-md rounded-md p-12 mt-20">
                 <div className="text-center">
                   <p className="text-base font-semibold text-gray-900">
                     Enter your details to log in
