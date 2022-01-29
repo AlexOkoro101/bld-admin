@@ -469,7 +469,12 @@ const selectImages = (event) => {
       {dealerCars?.length ? (
         <>
           {dealerCars?.map((car, index) => (
-            <div key={index} className="bg-white inline-block shadow-md border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
+            <div key={index} className="bg-white inline-block shadow-md relative border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
+              {car.publish && (
+                <div className="absolute right-0 bg-green-600">
+                  <svg className="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+              )}
               <a href="#">
                   {!car.images.length ? (
                     <div className="focus:outline-none w-full rounded-t-lg h-24 md:h-48 bg-gray-100 flex items-center justify-center">No Image</div>
