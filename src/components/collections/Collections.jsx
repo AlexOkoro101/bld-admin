@@ -6,12 +6,14 @@ import { getCollections, fetchCollections } from '../../../redux/actions/collect
 import { CollectionCard } from './CollectionCard';
 import { CollectionBuyNow } from './CollectionBuyNow';
 import ReactPaginate from 'react-paginate'
+import { ClipLoader} from "react-spinners";
 //
 //
 export const Collections = () => {
   const dispatch = useDispatch();
   const selectedData = useSelector((state) => state.collection.collections);
   console.log(selectedData)
+  const [isLoading, setisLoading] = useState(false)
   const [filteredData, setFilteredData] = useState(null);
   const [buyNow, setBuyNow] = useState(null);
   const [activeCard, setActiveCard] = useState(false);
@@ -47,6 +49,7 @@ export const Collections = () => {
   }, []);
 
   const handlePageChange = (data) => {
+    setFilteredData(null)
     console.log(data.selected)
 
     let currentPage = data.selected
@@ -63,6 +66,7 @@ export const Collections = () => {
   }
 
   const fetchBN = (pageNumber) => {
+    setisLoading(true)
     fetch(`https://buylinke.herokuapp.com/bids/buy-now/bid?page=` + pageNumber, {
       method: 'GET',
       headers: {},
@@ -72,6 +76,7 @@ export const Collections = () => {
         return response.text();
       })
       .then(function (res) {
+        setisLoading(false)
         const dada = JSON.parse(res);
         if (dada) {
           setBuyNow(dada.data);
@@ -100,7 +105,12 @@ export const Collections = () => {
       </div>
       {activeCard === false ? (
         <>
+          {!filteredData ? (
+            <ClipLoader size="40px" color="#999"></ClipLoader>
+          ) : (
           <CollectionCard filteredData={filteredData ? filteredData : null} />
+
+          )}
           <ReactPaginate
           previousLabel={'previous'}
           nextLabel={'next'}
@@ -118,7 +128,12 @@ export const Collections = () => {
         </>
       ) : (
         <>
+          {isLoading ? (
+            <ClipLoader size="40px" color="#999"></ClipLoader>
+          ) : (
           <CollectionBuyNow buyNow={buyNow} />
+
+          )}
           <ReactPaginate
           previousLabel={'previous'}
           nextLabel={'next'}

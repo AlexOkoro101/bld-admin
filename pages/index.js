@@ -22,6 +22,32 @@ function HomePage() {
     }
   }, [])
 
+  useEffect(() => {
+    getUsers()
+    return () => {
+      getUsers()
+    }
+  }, [])
+
+  const getUsers = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(enviroment.BASE_URL + "auth/user/users/all", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        const item = JSON.parse(result)
+        console.log(item)
+
+        if(item.error == false) {
+          setusers(item.data)
+        }
+      })
+      .catch(error => console.log('error', error));
+  }
+
 
   const getTransactions = () => {
     setisLoading(true)
@@ -40,7 +66,7 @@ function HomePage() {
       if(item.error == false) {
         settransactions(item)
         setpageCount(item.page)
-        settotalPage(item.total)
+        settotalPage(item.pageSize)
       }
     })
     .catch(error => console.log('error', error));
@@ -70,7 +96,7 @@ function HomePage() {
   const handlePageChange = (data) => {
     console.log(data.selected)
 
-    let currentPage = data.selected + 1
+    let currentPage = data.selected
 
     fetchTransactions(currentPage)
   }
@@ -86,9 +112,15 @@ function HomePage() {
       {isLoading ? (
         <ClipLoader size="40px" color="#999"></ClipLoader>
       ) : (
-      <div className="trasactions">
-        <p className="uppercase text-base mb-2 font-semibold">All Transactions</p>
-        <TransactionTable transactions={transactions}></TransactionTable>
+        <>
+        <div className="trasactions">
+          <p className="uppercase text-base mb-2 font-semibold">All Transactions</p>
+          <TransactionTable transactions={transactions}></TransactionTable>
+        </div>
+
+        </>
+
+      )}
         <ReactPaginate
           previousLabel={'previous'}
           nextLabel={'next'}
@@ -103,9 +135,6 @@ function HomePage() {
           previousLinkClassName={'page-link'}
           activeClassName={'active'}
         ></ReactPaginate>
-      </div>
-
-      )}
 
       
 

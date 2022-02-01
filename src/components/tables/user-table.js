@@ -9,7 +9,7 @@ function UsersTable({users}) {
     }
 
     return (
-        <div className="block w-full border mb-10">
+        <div className="block w-full border mb-10 overflow-x-auto">
           {/* transaction table */}
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="thead-light bg-gray-50">
