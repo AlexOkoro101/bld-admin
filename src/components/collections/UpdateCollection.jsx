@@ -4,8 +4,8 @@ import { ClipLoader} from "react-spinners";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const UpdateCollection = ({ setShowUpdateContent, carDetail }) => {
-  console.log();
+export const UpdateCollection = ({ setShowUpdateContent, carDetail, selectedData }) => {
+  console.log(carDetail);
   const ref = useRef();
   const [bidValue, setbidValue] = useState('won')
   const [isLoading, setisLoading] = useState(false)
@@ -55,10 +55,17 @@ export const UpdateCollection = ({ setShowUpdateContent, carDetail }) => {
           toast.success('Bid updated!')
           setTimeout(() => {
             setShowUpdateContent(false)
-          }, 700);
+            sendWhatsappMessage()
+          }, 1000);
         }
       })
       .catch(error => console.log('error', error));
+  } 
+
+  const sendWhatsappMessage = () => {
+    window.open(`https://api.whatsapp.com/send?phone=${selectedData.owner.profile.phoneNumber}&text=We%20would%20like%20to%20inform%20you%20that%20the%20result%20on%20your%20bid%20for%20${encodeURIComponent(
+      carDetail?.name
+    )}%20is%20'${encodeURIComponent(bidValue)}'`)
   }
   return (
     <>

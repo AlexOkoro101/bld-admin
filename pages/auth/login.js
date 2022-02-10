@@ -99,7 +99,7 @@ const LogIn = ({ beginLogin }) => {
             };
             localStorage.setItem('user', JSON.stringify(item));
             setTimeout(function () {
-              router.push('/');
+              router.reload();
               dispatch(logIn());
             }, 1500);
           }

@@ -41,6 +41,7 @@ const ContentList = () => {
           setShowUpdateContent={setShowUpdateContent}
           item={modalContent}
           carDetail={individualCar}
+          selectedData={selectedData}
         />
       )}
       {selectedData &&

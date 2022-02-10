@@ -21,7 +21,7 @@ export const Collections = () => {
   const [buyNowTotalPage, setbuyNowTotalPage] = useState(0)
   //
   useEffect(() => {
-    let data = selectedData?.data.filter((item) => item.vehicles.length > 0);
+    let data = selectedData?.data?.filter((item) => item.vehicles.length > 0);
     settotalPage(selectedData.total)
     setFilteredData(data);
   }, [selectedData]);

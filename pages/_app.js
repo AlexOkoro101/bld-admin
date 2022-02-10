@@ -1,15 +1,25 @@
 import Head from 'next/head';
 import 'tailwindcss/tailwind.css';
 import DashboardLayout from '../src/dashboard/layout';
+import Login from './auth/login';
 import '../styles/global.css';
 //
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { store, persistor } from '../redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 //
 //
 function MyApp({ Component, pageProps }) {
+  const [token, settoken] = useState(null)
+
+  useEffect(() => {
+    const item = JSON.parse(localStorage.getItem('user'))
+    console.log(item);
+    settoken(item?.userToken)
+  }, [])
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -37,9 +47,14 @@ function MyApp({ Component, pageProps }) {
             />
             <title>Buylike Admin </title>
           </Head>
+          {token ? (
           <DashboardLayout>
             <Component {...pageProps} />
           </DashboardLayout>
+
+          ) : (
+            <Login></Login>
+          )}
         </>
       </PersistGate>
     </Provider>
