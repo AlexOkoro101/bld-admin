@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"
 import Cards from "../src/components/dashboard-cards";
 import { enviroment } from "../src/components/environment";
@@ -8,6 +9,7 @@ import { ClipLoader} from "react-spinners";
 function HomePage() {
   const [transactions, settransactions] = useState(null);
   const [users, setusers] = useState(null)
+  const [searches, setsearches] = useState(null)
   const [isLoading, setisLoading] = useState(false)
 
 
@@ -28,6 +30,31 @@ function HomePage() {
       getUsers()
     }
   }, [])
+
+  useEffect(() => {
+    getSearches()
+    return () => {
+      getSearches()
+    }
+}, [])
+
+
+const getSearches = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(enviroment.BASE_URL + "search", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if(result.error == false) {
+          setsearches(result)
+        }
+      })
+      .catch(error => console.log('error', error));
+}
 
   const getUsers = () => {
     var requestOptions = {
@@ -65,8 +92,8 @@ function HomePage() {
 
       if(item.error == false) {
         settransactions(item)
-        setpageCount(item.page)
-        settotalPage(item.pageSize)
+        // setpageCount(item.page)
+        settotalPage(Math.round(item.total/item.pageSize))
       }
     })
     .catch(error => console.log('error', error));
@@ -106,11 +133,14 @@ function HomePage() {
 
   return (
     <div className="p-8 pl-24 flex flex-col gap-y-12">
-      <Cards transactions={transactions} users={users}></Cards>
+      <Cards transactions={transactions} users={users} searches={searches}></Cards>
 
 
       {isLoading ? (
-        <ClipLoader size="40px" color="#999"></ClipLoader>
+          <div className="flex h-56 items-center justify-center">
+            <ClipLoader size="50px" color="#999"></ClipLoader>
+
+          </div>
       ) : (
         <>
         <div className="trasactions">
@@ -121,20 +151,23 @@ function HomePage() {
         </>
 
       )}
-        <ReactPaginate
-          previousLabel={'previous'}
-          nextLabel={'next'}
-          pageCount={totalPage}
-          onPageChange={handlePageChange}
-          containerClassName={'pagination justify-center'}
-          pageClassName={'page-item'}
-          pageLinkClassName={'page-link'}
-          previousClassName={'page-item'}
-          nextClassName={'page-item'}
-          nextLinkClassName={'page-link'}
-          previousLinkClassName={'page-link'}
-          activeClassName={'active'}
-        ></ReactPaginate>
+        
+          <ReactPaginate
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            pageCount={totalPage}
+            onPageChange={handlePageChange}
+            containerClassName={'pagination justify-center'}
+            pageClassName={'page-item'}
+            pageLinkClassName={'page-link'}
+            previousClassName={'page-item'}
+            nextClassName={'page-item'}
+            nextLinkClassName={'page-link'}
+            previousLinkClassName={'page-link'}
+            activeClassName={'active'}
+          ></ReactPaginate>
+
+        
 
       
 

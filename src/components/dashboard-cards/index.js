@@ -1,5 +1,5 @@
 
-function Cards({users, transactions}) {
+function Cards({users, transactions, searches}) {
     console.log(users);
     return (
         <div className="flex justify-between">
@@ -14,8 +14,8 @@ function Cards({users, transactions}) {
             </div>
 
             <div className="transactions-card bg-yellow-600 text-white  w-52 p-4 uppercase">
-                <p className="font-semibold">Total Lorem</p>
-                <p className="text-sm">800,000</p>
+                <p className="font-semibold">Total Searches</p>
+                <p className="text-sm">{searches?.total.toLocaleString()}</p>
             </div>
 
             <div className="transactions-card bg-green-600 text-white w-52 p-4 uppercase">

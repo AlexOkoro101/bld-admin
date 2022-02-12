@@ -295,12 +295,21 @@ const BidDetails = () => {
         console.log(result)
         const item = JSON.parse(result)
         if(item.error == false) {
-            setprocessstage(processstage + 1)
-            setisLoading(false)
-            toast.success("Process added!")
+          setprocessstage(processstage + 1)
+          setisLoading(false)
+          toast.success("Process added!")
+            setTimeout(() => {
+              sendWhatsappMessage()
+            }, 1000);
         }
     })
     .catch(error => console.log('error', error));
+  }
+
+  const sendWhatsappMessage = () => {
+    window.open(`https://api.whatsapp.com/send?phone=${bidCollection.owner.profile.phoneNumber}&text=Update%20on%20the%20${encodeURIComponent(
+      bidCollection?.name
+    )}%20is%20'${encodeURIComponent(processStep)}'`)
   }
 
   const selectImages = (event) => {
@@ -472,7 +481,7 @@ const BidDetails = () => {
                           <input type="text" list="process" name="process-select" className="w-full border border-gray-400 rounded-lg p-2 text-sm outline-none text-gray-600" id="process-select" value={processStep} onChange={(e) => setprocessStep(e.target.value)} />
                           <datalist id="process">
                             <option>Choose process step</option>
-                            <option value="You placed a bid for...">You placed a bid for...</option>
+                            <option value={`You just placed a bid for ${bidCollection?.name}`}>You just placed a bid for {bidCollection?.name}</option>
                             <option value="Your bid has been won and is awaiting balance payment.">Your bid has been won and is awaiting balance payment.</option>
                             <option value="You paid the balance for the car and is awaiting pick up at the lot.">You paid the balance for the car and is awaiting pick up at the lot.</option>
                             <option value="Your car has been picked up from the lot and is on the way to the port.">Your car has been picked up from the lot and is on the way to the port.</option>

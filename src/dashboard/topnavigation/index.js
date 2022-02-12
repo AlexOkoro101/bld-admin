@@ -1,7 +1,32 @@
+import { useEffect, useState } from "react"
 import { useToggle } from '../provider/context';
 import { BellIcon } from '@heroicons/react/outline';
+import { useRouter } from "next/router";
+import { ClipLoader} from "react-spinners";
 export default function TopNavigation({ authScreen }) {
   const { toggle } = useToggle();
+  const [token, settoken] = useState(null)
+  const [isLoading, setisLoading] = useState(false)
+  const router = useRouter()
+
+
+  useEffect(() => {
+    const item = JSON.parse(localStorage.getItem('user'))
+
+    console.log(item);
+    settoken(item?.userToken)
+  }, [])
+
+  const logout = () => {
+    window.localStorage.clear('user')
+    setisLoading(true)
+    setTimeout(() => {
+      router.reload()
+      setisLoading(false)
+    }, 1000);
+
+  }
+
   return (
     <header
       className={
@@ -106,11 +131,21 @@ export default function TopNavigation({ authScreen }) {
                 <a href="#" className="block relative">
                   <BellIcon className="h-6 w-6 text-black" />
                 </a>
+                {token && (
+                  <button  onClick={() => logout()} className="bg-red-700 text-white ml-4 rounded-md text-sm px-3 py-1">
+                          
+                  {isLoading ? (
+                    <ClipLoader color="#fff" size="20px"></ClipLoader>
+                  ) : (
+                    <>Logout</>
+                  )}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="text-black">fghjk</div>
+          <div className="text-black"></div>
         )}
       </div>
     </header>

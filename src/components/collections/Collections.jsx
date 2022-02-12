@@ -22,7 +22,7 @@ export const Collections = () => {
   //
   useEffect(() => {
     let data = selectedData?.data?.filter((item) => item.vehicles.length > 0);
-    settotalPage(selectedData.total)
+    settotalPage(Math.round(selectedData.total/selectedData.pageSize))
     setFilteredData(data);
   }, [selectedData]);
   useEffect(() => {
@@ -39,7 +39,7 @@ export const Collections = () => {
         const dada = JSON.parse(res);
         if (dada) {
           setBuyNow(dada.data);
-          setbuyNowTotalPage(dada.total)
+          setbuyNowTotalPage(Math.round(dada.total/dada.pageSize))
           console.log(dada.data);
         }
       })
@@ -80,7 +80,7 @@ export const Collections = () => {
         const dada = JSON.parse(res);
         if (dada) {
           setBuyNow(dada.data);
-          setbuyNowTotalPage(dada.total)
+          // setbuyNowTotalPage()
           console.log(dada.data);
         }
       })
@@ -106,7 +106,10 @@ export const Collections = () => {
       {activeCard === false ? (
         <>
           {!filteredData ? (
-            <ClipLoader size="40px" color="#999"></ClipLoader>
+            <div className="flex h-56 items-center justify-center">
+              <ClipLoader size="50px" color="#999"></ClipLoader>
+
+            </div>
           ) : (
           <CollectionCard filteredData={filteredData ? filteredData : null} />
 
@@ -129,7 +132,10 @@ export const Collections = () => {
       ) : (
         <>
           {isLoading ? (
-            <ClipLoader size="40px" color="#999"></ClipLoader>
+            <div className="flex h-56 items-center justify-center">
+              <ClipLoader size="50px" color="#999"></ClipLoader>
+
+            </div>
           ) : (
           <CollectionBuyNow buyNow={buyNow} />
 

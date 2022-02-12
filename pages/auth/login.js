@@ -201,9 +201,9 @@ const LogIn = ({ beginLogin }) => {
                     </button>
                   </div>
                 </form>
-                <div className="text-center text-xs mt-10 text-blue-500">
+                {/* <div className="text-center text-xs mt-10 text-blue-500">
                   <Link href="/auth/login/forgotPassword">Forgot Password</Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

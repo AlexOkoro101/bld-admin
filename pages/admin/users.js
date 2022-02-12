@@ -2,8 +2,11 @@ import { useEffect, useState } from "react"
 import ReactPaginate from 'react-paginate'
 import { enviroment } from "../../src/components/environment"
 import UsersTable from "../../src/components/tables/user-table"
+import { ClipLoader} from "react-spinners";
+
 
 function Users() {
+  const [isLoading, setisLoading] = useState(false)
   const [users, setusers] = useState(null)
 
   //Paginate
@@ -18,6 +21,7 @@ function Users() {
   }, [])
 
   const getUsers = () => {
+    setisLoading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -26,6 +30,7 @@ function Users() {
     fetch(enviroment.BASE_URL + "auth/user/users/all", requestOptions)
       .then(response => response.text())
       .then(result => {
+        setisLoading(false)
         const item = JSON.parse(result)
         console.log(item.data.docs)
 
@@ -39,6 +44,7 @@ function Users() {
   }
 
   const fetchUsers = (currentPage) => {
+    setisLoading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -47,6 +53,7 @@ function Users() {
     fetch(enviroment.BASE_URL + `auth/user/users/all?page=${currentPage}`, requestOptions)
       .then(response => response.text())
       .then(result => {
+        setisLoading(false)
         const item = JSON.parse(result)
         console.log(item.data.docs)
 
@@ -60,17 +67,29 @@ function Users() {
   const handlePageChange = (data) => {
     console.log(data.selected)
 
-    let currentPage = data.selected + 1
+    let currentPage = data.selected
 
     fetchUsers(currentPage)
   }
 
 
   return (
-    <div className="p-8 pl-24">
+    <div className="p-8 pl-24 mb-20">
+    
       <div className="users">
+      {isLoading ? (
+          <div className="flex h-56 items-center justify-center">
+            <ClipLoader size="50px" color="#999"></ClipLoader>
+
+          </div>
+      ) : (
+        <>
         <p className="uppercase text-base mb-2 font-semibold">All Users</p>
         <UsersTable users={users}></UsersTable>
+
+        </>
+      )}
+
         <ReactPaginate
           previousLabel={'previous'}
           nextLabel={'next'}
@@ -85,6 +104,7 @@ function Users() {
           previousLinkClassName={'page-link'}
           activeClassName={'active'}
         ></ReactPaginate>
+
       </div>
     </div>
   )

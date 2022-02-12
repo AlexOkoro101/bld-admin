@@ -7,7 +7,7 @@ function UserSearch({searches}) {
     }
 
     return (
-        <div className="block w-full overflow-x-auto h-96 border">
+        <div className="block w-full border">
           {/* transaction table */}
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="thead-light bg-gray-50">
