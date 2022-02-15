@@ -32,10 +32,10 @@ function Users() {
       .then(result => {
         setisLoading(false)
         const item = JSON.parse(result)
-        console.log(item.data.docs)
+        console.log(item)
 
         if(item.error == false) {
-          setusers(item.data.docs)
+          setusers(item)
           // setpageCount(Number(item.data.page.replace(/\n/g, '')))
           settotalPage(item.data.pages)
         }
@@ -58,7 +58,7 @@ function Users() {
         console.log(item.data.docs)
 
         if(item.error == false) {
-          setusers(item.data.docs)
+          setusers(item)
         }
       })
       .catch(error => console.log('error', error));
@@ -84,6 +84,10 @@ function Users() {
           </div>
       ) : (
         <>
+        <div className="users-card bg-indigo-600 text-white w-52 p-4 mb-8 uppercase">
+            <p className="font-semibold">Total Users</p>
+            <p className="text-sm">{users?.data.total.toLocaleString()}</p>
+        </div>
         <p className="uppercase text-base mb-2 font-semibold">All Users</p>
         <UsersTable users={users}></UsersTable>
 

@@ -35,7 +35,7 @@ function UsersTable({users}) {
               </tr>
             </thead>
             <tbody>
-              {users?.map((user) => (
+              {users?.data.docs.map((user) => (
                 <tr key={user?._id} className="cursor-pointer">
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                     {user?.profile?.firstName || "N/A"}

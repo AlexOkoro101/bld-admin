@@ -31,7 +31,7 @@ function Search() {
             setisLoading(false)
             console.log(result)
             if(result.error == false) {
-              setsearches(result.data)
+              setsearches(result)
               settotalPage(Math.round(result.total/result.pageSize))
             }
           })
@@ -51,7 +51,7 @@ function Search() {
             setisLoading(false)
             console.log(result)
             if(result.error == false) {
-              setsearches(result.data)
+              setsearches(result)
               // settotalPage(Math.round(result.total/result.pageSize))
             }
           })
@@ -74,6 +74,10 @@ function Search() {
           </div>
         ) : (
           <div className="p-8 pl-24">
+              <div className="users-card bg-indigo-600 text-white w-52 p-4 mb-8 uppercase">
+                  <p className="font-semibold">Total Users</p>
+                  <p className="text-sm">{searches?.total.toLocaleString()}</p>
+              </div>
               <div className="search">
                   <p className="uppercase text-base mb-2 font-semibold">Top Searches</p>
                   <UserSearch searches={searches}></UserSearch>
