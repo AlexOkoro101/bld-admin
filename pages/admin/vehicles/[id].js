@@ -363,7 +363,7 @@ function CarDetail() {
             body: JSON.stringify(data),
           };
       
-          fetch(enviroment.BASE_URL + "vehicles/dealers/list/" + carDetail.Bvin , requestOptions)
+          fetch(enviroment.BASE_URL + "vehicles/dealers/list/" + carDetail?.Bvin , requestOptions)
           .then(response => response.json())
           .then(result => {
                 console.log(result)
