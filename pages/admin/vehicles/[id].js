@@ -287,7 +287,8 @@ function CarDetail() {
         selectedFiles.splice(id, 1)
         console.log(selectedFiles)
 
-        setSelectedFiles(selectedFiles)
+        // setSelectedFiles(selectedFiles)
+        setSelectedFiles(selectedFiles.filter((fil,i)=>i!==id))
         
     }
 
