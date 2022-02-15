@@ -14,6 +14,7 @@ export const Collections = () => {
   const selectedData = useSelector((state) => state.collection.collections);
   console.log(selectedData)
   const [isLoading, setisLoading] = useState(false)
+  const [loading, setloading] = useState(false)
   const [filteredData, setFilteredData] = useState(null);
   const [buyNow, setBuyNow] = useState(null);
   const [activeCard, setActiveCard] = useState(false);
@@ -66,7 +67,7 @@ export const Collections = () => {
   }
 
   const fetchBN = (pageNumber) => {
-    setisLoading(true)
+    setloading(true)
     fetch(`https://buylinke.herokuapp.com/bids/buy-now/bid?page=` + pageNumber, {
       method: 'GET',
       headers: {},
@@ -76,7 +77,7 @@ export const Collections = () => {
         return response.text();
       })
       .then(function (res) {
-        setisLoading(false)
+        setloading(false)
         const dada = JSON.parse(res);
         if (dada) {
           setBuyNow(dada.data);
@@ -108,7 +109,6 @@ export const Collections = () => {
           {!filteredData ? (
             <div className="flex h-56 items-center justify-center">
               <ClipLoader size="50px" color="#999"></ClipLoader>
-
             </div>
           ) : (
           <CollectionCard filteredData={filteredData ? filteredData : null} />
@@ -137,23 +137,34 @@ export const Collections = () => {
 
             </div>
           ) : (
-          <CollectionBuyNow buyNow={buyNow} />
+            <>
+              {loading ? (
+                <div className="flex h-56 items-center justify-center">
+                  <ClipLoader size="50px" color="#999"></ClipLoader>
+
+                </div>
+              ) : (
+                <CollectionBuyNow buyNow={buyNow} />
+              )}
+
+              <ReactPaginate
+              previousLabel={'previous'}
+              nextLabel={'next'}
+              pageCount={buyNowTotalPage}
+              onPageChange={handlePageChangeBN}
+              containerClassName={'pagination justify-center'}
+              pageClassName={'page-item'}
+              pageLinkClassName={'page-link'}
+              previousClassName={'page-item'}
+              nextClassName={'page-item'}
+              nextLinkClassName={'page-link'}
+              previousLinkClassName={'page-link'}
+              activeClassName={'active'}
+            ></ReactPaginate>
+
+            </>
 
           )}
-          <ReactPaginate
-          previousLabel={'previous'}
-          nextLabel={'next'}
-          pageCount={buyNowTotalPage}
-          onPageChange={handlePageChangeBN}
-          containerClassName={'pagination justify-center'}
-          pageClassName={'page-item'}
-          pageLinkClassName={'page-link'}
-          previousClassName={'page-item'}
-          nextClassName={'page-item'}
-          nextLinkClassName={'page-link'}
-          previousLinkClassName={'page-link'}
-          activeClassName={'active'}
-        ></ReactPaginate>
         </>
       )}
     </div>

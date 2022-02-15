@@ -4,6 +4,7 @@ import { enviroment } from "../../../src/components/environment"
 import axios from 'axios';
 import Resizer from "react-image-file-resizer";
 import { useRouter } from 'next/router'
+import { ClipLoader} from "react-spinners";
  
 import FileBase64 from 'react-file-base64';
 
@@ -14,7 +15,7 @@ function Vehicies() {
 
   var numberFormatter = new Intl.NumberFormat();
 
-
+  const [loading, setloading] = useState(false)
   const [users, setusers] = useState(null)
   const [images, setImages] = useState([])
   const [makes , setMakes] = useState([])
@@ -96,6 +97,7 @@ function Vehicies() {
   }, [])
 
   const getDealerCars = () => {
+    setloading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -104,6 +106,7 @@ function Vehicies() {
     fetch(enviroment.BASE_URL + "vehicles/dealers/list", requestOptions)
     .then(response => response.json())
     .then(result => {
+      setloading(false)
       console.log("cars", result)
       if(result.error == false) {
         setdealerCars(result.data)
@@ -465,75 +468,84 @@ const selectImages = (event) => {
  
       </div>
 
-      <div className="flex flex-wrap">
-      {dealerCars?.length ? (
-        <>
-          {dealerCars?.map((car, index) => (
-            <div key={index} className="bg-white inline-block shadow-md relative border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
-              {car.publish && (
-                <div className="absolute right-0 bg-green-600">
-                  <svg className="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-              )}
-              <a href="#">
-                  {!car.images.length ? (
-                    <div className="focus:outline-none w-full rounded-t-lg h-24 md:h-48 bg-gray-100 flex items-center justify-center">No Image</div>
-                  ) : (
-                    <div className="focus:outline-none w-full rounded-t-lg h-24 md:h-48 bg-gray-100 flex items-center justify-center">
-                      {typeof(car.images[0]) === 'object' ? (
-                        <img src={car.images[0]?.image_largeUrl} alt="" className="h-full w-full object-cover" />
-                      ) : (
-                        <img src={car.images[0]} alt="" className="h-full w-full object-cover" />
-                      )}
+      <>
+      {loading ? (
+        <div className="flex h-56 items-center justify-center">
+          <ClipLoader size="50px" color="#999"></ClipLoader>
+        </div>
+      ) : (
+        <div className="flex flex-wrap">
+          {dealerCars?.length ? (
+            <>
+              {dealerCars?.map((car, index) => (
+                <div key={index} className="bg-white inline-block shadow-md relative border border-gray-200 rounded-lg w-3/12 m-5 dark:bg-gray-800 dark:border-gray-700">
+                  {car.publish && (
+                    <div className="absolute right-0 bg-green-600">
+                      <svg className="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                   )}
-              </a>
-              <div className="p-5">
                   <a href="#">
-                      <h5 className="text-black font-semibold text-sm tracking-tight dark:text-white uppercase">{car.make && car.model ? (`${car.make} ${car.model}`) : "No name"}</h5>
+                      {!car.images.length ? (
+                        <div className="focus:outline-none w-full rounded-t-lg h-24 md:h-48 bg-gray-100 flex items-center justify-center">No Image</div>
+                      ) : (
+                        <div className="focus:outline-none w-full rounded-t-lg h-24 md:h-48 bg-gray-100 flex items-center justify-center">
+                          {typeof(car.images[0]) === 'object' ? (
+                            <img src={car.images[0]?.image_largeUrl} alt="" className="h-full w-full object-cover" />
+                          ) : (
+                            <img src={car.images[0]} alt="" className="h-full w-full object-cover" />
+                          )}
+                        </div>
+                      )}
                   </a>
-                  <div className="flex gap-x-2 font-medium text-sm text-gray-500">
-                    <p>{car.year || "year"}</p>
-                    <p>{car.odometer ? (`${numberFormatter.format(car.odometer)} miles`) : "miles"}</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="font-normal text-sm text-gray-500">{car.pickupLocation || "Location"}</p>
-                    <p style={{fontSize: "10px"}} className="font-normal text-gray-500">
-                    {car.auctionEndTime ? (
-                      new Date(car?.auctionEndTime).toLocaleDateString("en-NG",
-                                {
-                                    year: "numeric",
-                                    day: "numeric",
-                                    month: "long",
-                                }
-                            )
-                    ) : "auction date"}
-                    </p>
-                  </div>
-                  <div className="flex justify-between mt-4">
-                    <div className="flex flex-col">
-                      <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">BUY NOW {car.buyNowPrice ? `$${numberFormatter.format(car.buyNowPrice)}` : "N/A"}</p>
-                      <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">MMR {car.mmrPrice ? `$${numberFormatter.format(car.mmrPrice)}` : "N/A"}</p>
-                    </div>
-                    <button style={{fontSize: "10px"}} onClick={() => router.push('/admin/vehicles/' + car._id)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-lg px-5 py-1 text-center inline-flex items-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        View
-                        
-                    </button>
+                  <div className="p-5">
+                      <a href="#">
+                          <h5 className="text-black font-semibold text-sm tracking-tight dark:text-white uppercase">{car.make && car.model ? (`${car.make} ${car.model}`) : "No name"}</h5>
+                      </a>
+                      <div className="flex gap-x-2 font-medium text-sm text-gray-500">
+                        <p>{car.year || "year"}</p>
+                        <p>{car.odometer ? (`${numberFormatter.format(car.odometer)} miles`) : "miles"}</p>
+                      </div>
+                      <div className="flex justify-between">
+                        <p className="font-normal text-sm text-gray-500">{car.pickupLocation || "Location"}</p>
+                        <p style={{fontSize: "10px"}} className="font-normal text-gray-500">
+                        {car.auctionEndTime ? (
+                          new Date(car?.auctionEndTime).toLocaleDateString("en-NG",
+                                    {
+                                        year: "numeric",
+                                        day: "numeric",
+                                        month: "long",
+                                    }
+                                )
+                        ) : "auction date"}
+                        </p>
+                      </div>
+                      <div className="flex justify-between mt-4">
+                        <div className="flex flex-col">
+                          <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">BUY NOW {car.buyNowPrice ? `$${numberFormatter.format(car.buyNowPrice)}` : "N/A"}</p>
+                          <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">MMR {car.mmrPrice ? `$${numberFormatter.format(car.mmrPrice)}` : "N/A"}</p>
+                        </div>
+                        <button style={{fontSize: "10px"}} onClick={() => router.push('/admin/vehicles/' + car._id)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-lg px-5 py-1 text-center inline-flex items-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            View
+                            
+                        </button>
 
+                      </div>
                   </div>
-              </div>
-            </div>
+                </div>
 
-          ))}
-        </>
+              ))}
+            </>
 
-      ) : (
-        <>
-          <p className="mt-10">No cars yet</p>
-        </>
+          ) : (
+            <>
+              <p className="mt-10">No cars yet</p>
+            </>
+          )}
+
+        </div>
       )}
 
-      </div>
+      </>
 
      
     </div>

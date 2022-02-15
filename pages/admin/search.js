@@ -7,6 +7,7 @@ import { ClipLoader} from "react-spinners";
 
 function Search() {
     const [isLoading, setisLoading] = useState(false)
+    const [isPaginationLoading, setisPaginationLoading] = useState(false)
     const [searches, setsearches] = useState(null)
     const [totalPage, settotalPage] = useState(0)
 
@@ -39,7 +40,7 @@ function Search() {
     }
 
     const fetchSearches = (currentPage) => {
-      setisLoading(true)
+      setisPaginationLoading(true)
         var requestOptions = {
           method: 'GET',
           redirect: 'follow'
@@ -48,7 +49,7 @@ function Search() {
         fetch(enviroment.BASE_URL + `search?page=${currentPage}`, requestOptions)
           .then(response => response.json())
           .then(result => {
-            setisLoading(false)
+            setisPaginationLoading(false)
             console.log(result)
             if(result.error == false) {
               setsearches(result)
@@ -73,6 +74,7 @@ function Search() {
 
           </div>
         ) : (
+          <>
           <div className="p-8 pl-24">
               <div className="users-card bg-indigo-600 text-white w-52 p-4 mb-8 uppercase">
                   <p className="font-semibold">Total Users</p>
@@ -80,25 +82,32 @@ function Search() {
               </div>
               <div className="search">
                   <p className="uppercase text-base mb-2 font-semibold">Top Searches</p>
-                  <UserSearch searches={searches}></UserSearch>
+                  {isPaginationLoading ? (
+                    <div className="flex h-56 items-center justify-center">
+                      <ClipLoader size="50px" color="#999"></ClipLoader>
+
+                    </div>
+                  ) : (
+                      <UserSearch searches={searches}></UserSearch>
+                  )}
               </div>
           </div>
-
+          <ReactPaginate
+              previousLabel={'previous'}
+              nextLabel={'next'}
+              pageCount={totalPage}
+              onPageChange={handlePageChange}
+              containerClassName={'pagination justify-center'}
+              pageClassName={'page-item'}
+              pageLinkClassName={'page-link'}
+              previousClassName={'page-item'}
+              nextClassName={'page-item'}
+              nextLinkClassName={'page-link'}
+              previousLinkClassName={'page-link'}
+              activeClassName={'active'}
+            ></ReactPaginate>
+          </>
         )}
-        <ReactPaginate
-            previousLabel={'previous'}
-            nextLabel={'next'}
-            pageCount={totalPage}
-            onPageChange={handlePageChange}
-            containerClassName={'pagination justify-center'}
-            pageClassName={'page-item'}
-            pageLinkClassName={'page-link'}
-            previousClassName={'page-item'}
-            nextClassName={'page-item'}
-            nextLinkClassName={'page-link'}
-            previousLinkClassName={'page-link'}
-            activeClassName={'active'}
-          ></ReactPaginate>
 
         </>
     )

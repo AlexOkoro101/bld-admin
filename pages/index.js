@@ -11,6 +11,7 @@ function HomePage() {
   const [users, setusers] = useState(null)
   const [searches, setsearches] = useState(null)
   const [isLoading, setisLoading] = useState(false)
+  const [isPaginationLoading, setisPaginationLoading] = useState(false)
 
 
   //Pagination
@@ -100,7 +101,7 @@ const getSearches = () => {
   }
 
   const fetchTransactions = (currentPage) => {
-    setisLoading(true)
+    setisPaginationLoading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -109,7 +110,7 @@ const getSearches = () => {
     fetch(enviroment.BASE_URL + "transactions?page="  + currentPage, requestOptions)
     .then(response => response.text())
     .then(result => {
-      setisLoading(false)
+      setisPaginationLoading(false)
       const item = JSON.parse(result)
       console.log(item)
 
@@ -137,35 +138,44 @@ const getSearches = () => {
 
 
       {isLoading ? (
-          <div className="flex h-56 items-center justify-center">
-            <ClipLoader size="50px" color="#999"></ClipLoader>
-
-          </div>
+        <div className="flex h-56 items-center justify-center">
+          <ClipLoader size="50px" color="#999"></ClipLoader>
+        </div>
       ) : (
         <>
         <div className="trasactions">
           <p className="uppercase text-base mb-2 font-semibold">All Transactions</p>
-          <TransactionTable transactions={transactions}></TransactionTable>
+          {isPaginationLoading ? (
+
+            <div className="flex h-56 items-center justify-center">
+              <ClipLoader size="50px" color="#999"></ClipLoader>
+            </div>
+            
+          ) : (
+
+            <TransactionTable transactions={transactions}></TransactionTable>
+
+          )}
         </div>
 
+        <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          pageCount={totalPage}
+          onPageChange={handlePageChange}
+          containerClassName={'pagination justify-center'}
+          pageClassName={'page-item'}
+          pageLinkClassName={'page-link'}
+          previousClassName={'page-item'}
+          nextClassName={'page-item'}
+          nextLinkClassName={'page-link'}
+          previousLinkClassName={'page-link'}
+          activeClassName={'active'}
+        ></ReactPaginate>
         </>
 
       )}
         
-          <ReactPaginate
-            previousLabel={'previous'}
-            nextLabel={'next'}
-            pageCount={totalPage}
-            onPageChange={handlePageChange}
-            containerClassName={'pagination justify-center'}
-            pageClassName={'page-item'}
-            pageLinkClassName={'page-link'}
-            previousClassName={'page-item'}
-            nextClassName={'page-item'}
-            nextLinkClassName={'page-link'}
-            previousLinkClassName={'page-link'}
-            activeClassName={'active'}
-          ></ReactPaginate>
 
         
 

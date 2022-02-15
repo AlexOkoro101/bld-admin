@@ -7,6 +7,7 @@ import { ClipLoader} from "react-spinners";
 
 function Users() {
   const [isLoading, setisLoading] = useState(false)
+  const [loading, setloading] = useState(false)
   const [users, setusers] = useState(null)
 
   //Paginate
@@ -44,7 +45,7 @@ function Users() {
   }
 
   const fetchUsers = (currentPage) => {
-    setisLoading(true)
+    setloading(true)
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -53,7 +54,7 @@ function Users() {
     fetch(enviroment.BASE_URL + `auth/user/users/all?page=${currentPage}`, requestOptions)
       .then(response => response.text())
       .then(result => {
-        setisLoading(false)
+        setloading(false)
         const item = JSON.parse(result)
         console.log(item.data.docs)
 
@@ -89,10 +90,14 @@ function Users() {
             <p className="text-sm">{users?.data.total.toLocaleString()}</p>
         </div>
         <p className="uppercase text-base mb-2 font-semibold">All Users</p>
-        <UsersTable users={users}></UsersTable>
+        {loading ? (
+          <div className="flex h-56 items-center justify-center">
+            <ClipLoader size="50px" color="#999"></ClipLoader>
 
-        </>
-      )}
+          </div>
+        ) : (
+          <UsersTable users={users}></UsersTable>
+        )}
 
         <ReactPaginate
           previousLabel={'previous'}
@@ -108,6 +113,9 @@ function Users() {
           previousLinkClassName={'page-link'}
           activeClassName={'active'}
         ></ReactPaginate>
+        </>
+      )}
+
 
       </div>
     </div>
