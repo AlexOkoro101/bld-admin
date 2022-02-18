@@ -3,8 +3,10 @@ import { useEffect, useState } from "react"
 import { enviroment } from "../../../src/components/environment";
 import ReactPaginate from 'react-paginate'
 import { ClipLoader} from "react-spinners";
+import { useRouter } from "next/router";
 
 function Transactions() {
+    const router = useRouter()
   const [transactions, settransactions] = useState(null);
   const [users, setusers] = useState(null)
   const [searches, setsearches] = useState(null)
