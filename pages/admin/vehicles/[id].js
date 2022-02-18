@@ -78,6 +78,9 @@ function CarDetail() {
     const router = useRouter()
     const carVIN = router.query.id;
 
+    const [confirmModal, setconfirmModal] = useState(false)
+    const [deletePhotoId, setdeletePhotoId] = useState(null)
+
     useEffect(() => {
         
         getCarDetails()
@@ -267,6 +270,7 @@ function CarDetail() {
                 <div style={{height: "10%"}} className="overflow-hidden">
                     <i className="fa fa-trash mr-1 cursor-pointer text-red-500 float-right z-50" onClick={() => deletePhoto(i)}></i>
                 </div>
+                
                 <div className="relative p-1 w-full" style={{height: "90%"}} key={i}>
                     {typeof(photo) === 'object' ? (
                         <img src={photo?.image_largeUrl} alt="" key={photo?.image_largeUrl} className="h-full w-full" />
@@ -282,13 +286,16 @@ function CarDetail() {
 
     const deletePhoto = (id) => {
         // console.log(id)
+        setconfirmModal(true)
+        setdeletePhotoId(id)
 
-        
-        selectedFiles.splice(id, 1)
-        console.log(selectedFiles)
+        // selectedFiles.splice(id, 1)
+        // console.log(selectedFiles)
 
-        // setSelectedFiles(selectedFiles)
-        setSelectedFiles(selectedFiles.filter((fil,i)=>i!==id))
+        // setSelectedFiles(selectedFiles.filter((fil,i)=>i!==id))
+
+        // return (
+        // )
         
     }
 
@@ -515,6 +522,14 @@ function CarDetail() {
             }
         })
         .catch(error => console.log('error', error));
+    }
+
+    const confirmImageDelete = () => {
+          selectedFiles.splice(deletePhotoId, 1)
+        // console.log(selectedFiles)
+
+        setSelectedFiles(selectedFiles.filter((fil,i)=>i!==deletePhotoId))
+        setconfirmModal(false)
     }
 
     return (
@@ -1148,6 +1163,44 @@ function CarDetail() {
                    </form>
                 </div>
             )}
+
+            {confirmModal && (
+                    <div id="switchAddressModal" className="modal">
+                        {/* <!-- Modal content --> */}
+                        <div className="modal-content sheetModal bg-white relative w-10/12 lg:w-1/3 mx-auto mx-8 md:px-0 md:mt-28 md:px-20 md:py-10">
+                            <span
+                                onClick={() => {
+                                setconfirmModal(false);
+                                }}
+                                className="close absolute cursor-pointer right-5 top-1 text-4xl text-gray-500"
+                            >
+                                &times;
+                            </span>
+                                
+                            <div
+                                className="flex flex-col gap-4"
+                                    
+                                    >
+                                    <h1 className="font-semibold text-lg text-center">Are you sure you want to delete this image?</h1>
+                                <div className="flex gap-4 items-center justify-center">
+                                    <button
+                                    onClick={() => {
+                                        confirmImageDelete();
+                                    }}
+                                     className="py-1 px-4 text-sm rounded-md bg-green-500 text-white mr-1">Yes</button>
+
+                                    <button 
+                                    onClick={() => {
+                                        setconfirmModal(false);
+                                    }} 
+                                    className="py-1 px-4 text-sm rounded-md bg-white text-black mr-1 border">
+                                    Cancel
+                                    </button>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>    
+                )}
         </div>
     )
 }

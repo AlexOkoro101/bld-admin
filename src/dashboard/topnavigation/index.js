@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useToggle } from '../provider/context';
 import { BellIcon } from '@heroicons/react/outline';
 import { useRouter } from "next/router";
@@ -7,11 +7,16 @@ export default function TopNavigation({ authScreen }) {
   const { toggle } = useToggle();
   const [token, settoken] = useState(null)
   const [isLoading, setisLoading] = useState(false)
+  const [searchDropdown, setsearchDropdown] = useState(false)
+  const [searchValue, setsearchValue] = useState("")
   const router = useRouter()
+  const dropdownRef = useRef(null);
 
 
   useEffect(() => {
     const item = JSON.parse(localStorage.getItem('user'))
+    const newSearchValue = localStorage.getItem('searchValue')
+    setsearchValue(newSearchValue)
 
     console.log(item);
     settoken(item?.userToken)
@@ -26,6 +31,87 @@ export default function TopNavigation({ authScreen }) {
     }, 1000);
 
   }
+
+  const focusFunction = (e) => {
+    // console.log(e.target.value)
+    setsearchDropdown(true)
+  }
+
+
+  const fetchUser = () => {
+    window.localStorage.setItem('searchValue', searchValue)
+    
+    if(router.pathname == "/admin/find/users") {
+      router.reload()
+    } else {
+      router.push('/admin/find/users')
+    }
+    setsearchDropdown(false)
+    // setsearchValue("")
+  }
+
+  const fetchTransaction = () => {
+    window.localStorage.setItem('searchValue', searchValue)
+    
+    if(router.pathname == "/admin/find/transactions") {
+      router.reload()
+    } else {
+      router.push('/admin/find/transactions')
+    }
+    setsearchDropdown(false)
+    // setsearchValue("")
+  }
+
+  const fetchVehicle = () => {
+    window.localStorage.setItem('searchValue', searchValue)
+    
+    if(router.pathname == "/admin/find/vehicles") {
+      router.reload()
+    } else {
+      router.push('/admin/find/vehicles')
+    }
+    setsearchDropdown(false)
+    // setsearchValue("")
+  }
+
+  const fetchCollection = () => {
+    window.localStorage.setItem('searchValue', searchValue)
+    
+    if(router.pathname == "/admin/find/collections") {
+      router.reload()
+    } else {
+      router.push('/admin/find/collections')
+    }
+    setsearchDropdown(false)
+    // setsearchValue("")
+  }
+
+  function closeDropdown(ref) {
+    useEffect(() => {
+      function handleClickOutside(event) {
+        if (
+          event.target.matches("#data-dropdown-toggle, #data-dropdown-toggle *")
+        ) {
+          return;
+        }
+        if (ref.current && !ref.current.contains(event.target)) {
+          // alert(navDropdown)
+          setsearchDropdown(false);
+        } else {
+          // setsearchDropdown(true);
+        }
+      }
+
+      // Bind the event listener
+      window.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        window.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
+  closeDropdown(dropdownRef);
 
   return (
     <header
@@ -73,10 +159,25 @@ export default function TopNavigation({ authScreen }) {
                     <path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" />
                   </svg>
                   <input
+                    ref={dropdownRef}
                     type="text"
                     className="bg-white block  border-2 border-gray-700 pl-10 py-1.5 pr-4  rounded-2xl text-black w-full  focus:outline-none "
                     placeholder="Search"
+                    value={searchValue}
+                    onChange={(e) => setsearchValue(e.target.value)}
+                    onKeyUp={(e) => focusFunction(e)}
+                  
                   />
+                  {searchDropdown && (
+                  <div className="search-dropdown" id="data-dropdown-toggle">
+                    <div className="flex flex-col">
+                        <p onClick={() => fetchTransaction()} className="px-2 py-4 border-b text-gray-700 text-base cursor-pointer hover:bg-gray-50">Search for <b>{searchValue}</b> in <b>Transactions</b></p>
+                        <p onClick={() => fetchUser()} className="px-2 py-4 border-b text-gray-700 text-base cursor-pointer hover:bg-gray-50">Search for <b>{searchValue}</b> in <b>Users</b></p>
+                        <p onClick={() => fetchVehicle()} className="px-2 py-4 border-b text-gray-700 text-base cursor-pointer hover:bg-gray-50">Search for <b>{searchValue}</b> in <b>Vehicles</b></p>
+                        <p onClick={() => fetchCollection()} className="px-2 py-4 border-b text-gray-700 text-base cursor-pointer hover:bg-gray-50">Search for <b>{searchValue}</b> in <b>Collections</b></p>
+                    </div>
+                  </div>
+                  )}
                 </div>
               </div>
               <div className="flex items-center justify-end ml-5 p-1 relative w-full sm:mr-0 sm:right-auto">
