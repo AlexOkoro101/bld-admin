@@ -159,11 +159,11 @@ const getSearches = () => {
         </div>
 
         <ReactPaginate
-          previousLabel={'previous'}
-          nextLabel={'next'}
+          previousLabel={'<'}
+          nextLabel={'>'}
           pageCount={totalPage}
           onPageChange={handlePageChange}
-          containerClassName={'pagination justify-center'}
+          containerClassName={'pagination justify-end'}
           pageClassName={'page-item'}
           pageLinkClassName={'page-link'}
           previousClassName={'page-item'}

@@ -2,10 +2,13 @@ import { useEffect, useState } from "react"
 import ReactPaginate from 'react-paginate'
 import { enviroment } from "../../src/components/environment"
 import UsersTable from "../../src/components/tables/user-table"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { ClipLoader} from "react-spinners";
 
 
 function Users() {
+  const [startDate, setStartDate] = useState(new Date());
   const [isLoading, setisLoading] = useState(false)
   const [loading, setloading] = useState(false)
   const [users, setusers] = useState(null)
@@ -89,7 +92,10 @@ function Users() {
             <p className="font-semibold">Total Users</p>
             <p className="text-sm">{users?.data.total.toLocaleString()}</p>
         </div>
-        <p className="uppercase text-base mb-2 font-semibold">All Users</p>
+        <div className="flex justify-between items-center  mb-2">
+          <p className="uppercase text-base font-semibold w-11/12">All Users</p>
+          <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} className="userPicker" peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"  showYearDropdown />
+        </div>
         {loading ? (
           <div className="flex h-56 items-center justify-center">
             <ClipLoader size="50px" color="#999"></ClipLoader>
@@ -100,11 +106,11 @@ function Users() {
         )}
 
         <ReactPaginate
-          previousLabel={'previous'}
-          nextLabel={'next'}
+          previousLabel={'<'}
+          nextLabel={'>'}
           pageCount={totalPage}
           onPageChange={handlePageChange}
-          containerClassName={'pagination justify-center'}
+          containerClassName={'pagination justify-end'}
           pageClassName={'page-item'}
           pageLinkClassName={'page-link'}
           previousClassName={'page-item'}

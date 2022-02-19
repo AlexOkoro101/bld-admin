@@ -31,6 +31,9 @@ input[type=checkbox] {
     list-style: none;
     border-radius: 0.25rem;
 }
+.page-item {
+    margin: 5px;
+}
 .page-item:last-child .page-link {
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
@@ -39,7 +42,7 @@ input[type=checkbox] {
     cursor: pointer;
 }
 .page-item.disabled .page-link {
-    color: #6c757d;
+    color: #dee2e6;
     pointer-events: none;
     cursor: auto;
     background-color: #fff;
@@ -52,8 +55,8 @@ input[type=checkbox] {
 }
 .page-item.active .page-link {
     z-index: 1;
-    color: #fff;
-    background-color: #007bff;
+    color: #007bff;
+    /* background-color: #007bff; */
     border-color: #007bff;
 }
 .page-link {
@@ -62,8 +65,16 @@ input[type=checkbox] {
     padding: 0.5rem 0.75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #007bff;
+    color: #000;
     background-color: #fff;
     border: 1px solid #dee2e6;
 }
-
+.react-datepicker-wrapper {
+    width: auto !important;
+}
+.userPicker {
+    border: 1px solid #ddd;
+    padding: 4px;
+    font-size: 13px;
+    outline: none;
+}
