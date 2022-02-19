@@ -93,8 +93,11 @@ function Users() {
             <p className="text-sm">{users?.data.total.toLocaleString()}</p>
         </div>
         <div className="flex justify-between items-center  mb-2">
-          <p className="uppercase text-base font-semibold w-11/12">All Users</p>
-          <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} className="userPicker" peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"  showYearDropdown />
+          <p className="uppercase text-base font-semibold w-3/4">All Users</p>
+          <div className="flex gap-2 items-center">
+            <p className="text-sm text-black">Filter by date: </p>
+            <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} className="userPicker" peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"  showYearDropdown />
+          </div>
         </div>
         {loading ? (
           <div className="flex h-56 items-center justify-center">
