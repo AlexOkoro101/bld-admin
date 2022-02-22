@@ -43,7 +43,7 @@ const ContentSideComponent = () => {
     <Tabs>
       <TabList className="transition-all delay-700 ease-in-out border-b-2">
         <Tab className="transition-all text-xs md:text-sm delay-400 cursor-pointer mr-5 ease-in-out inline ">
-          {selectedData.bids.length} Auctions
+          {selectedData?.bids?.length} Auctions
         </Tab>
         {/* <Tab className="transition-all text-xs md:text-sm delay-400 cursor-pointer mx-5 ease-in-out inline ">
           25 Auctions

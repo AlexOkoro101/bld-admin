@@ -9,6 +9,7 @@ const TimeTrail = () => {
   const selectedData = useSelector(
     (state) => state.collection.collectionDetail,
   );
+  console.log(selectedData)
 
   const Completionist = () => <span>Auction Ended!</span>;
 
@@ -49,7 +50,7 @@ const TimeTrail = () => {
   return (
     <>
       
-      {selectedData.bids.map((ele, id) => (
+      {selectedData?.bids?.map((ele, id) => (
         <div
           key={id}
           className={` mt-4 border p-0 pl-1.5 rounded-lg overflow-hidden border-gray-30`}

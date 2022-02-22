@@ -203,7 +203,7 @@ const ModalComponent = ({ setShowModal, item }) => {
             onClick={() => setToggler(!toggler)}
           >
             <div className="flex items-center justify-center bg-black opacity-60 h-full w-full">
-              Show {item.images.length - 1} more
+              Show {item?.images?.length - 1} more
             </div>
           </div>
 
