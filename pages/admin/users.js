@@ -5,6 +5,41 @@ import UsersTable from "../../src/components/tables/user-table"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ClipLoader} from "react-spinners";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    
+    // title: {
+    //   display: true,
+    //   text: 'Users',
+    // },
+  },
+};
+
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
 
 
 function Users() {
@@ -16,6 +51,19 @@ function Users() {
   //Paginate
   const [pageCount, setpageCount] = useState(0)
   const [totalPage, settotalPage] = useState(0)
+  
+  const [usersData, setusersData] = useState({
+    labels,
+    datasets: [
+      {
+        label: 'Users',
+        data: [1,2,3,4,5,6,7],
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  });
+
 
   useEffect(() => {
     getUsers()
@@ -23,7 +71,7 @@ function Users() {
       getUsers()
     }
   }, [])
-
+  
   const getUsers = () => {
     setisLoading(true)
     var requestOptions = {
@@ -92,12 +140,16 @@ function Users() {
             <p className="font-semibold">Total Users</p>
             <p className="text-sm">{users?.data.total.toLocaleString()}</p>
         </div>
-        <div className="flex justify-between items-center  mb-2">
-          <p className="uppercase text-base font-semibold w-3/4">All Users</p>
+        <div className="flex justify-between items-center ">
+          
           {/* <div className="flex gap-2 items-center">
             <p className="text-sm text-black">Filter by date: </p>
             <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} className="userPicker" peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"  showYearDropdown />
           </div> */}
+        </div>
+        <div className="w-1/2 mb-12 text-black">
+         <Line options={options} data={usersData} />
+
         </div>
         {loading ? (
           <div className="flex h-56 items-center justify-center">
@@ -105,7 +157,10 @@ function Users() {
 
           </div>
         ) : (
+          <>
+          <p className="uppercase text-base font-semibold w-3/4  mb-2">All Users</p>
           <UsersTable users={users}></UsersTable>
+          </>
         )}
 
         <ReactPaginate
@@ -127,6 +182,7 @@ function Users() {
 
 
       </div>
+      
     </div>
   )
 }
