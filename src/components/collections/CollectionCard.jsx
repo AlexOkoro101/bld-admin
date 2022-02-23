@@ -65,8 +65,17 @@ export const CollectionCard = ({ filteredData }) => {
       {filteredData !== null &&
         filteredData?.map((ele, id) => (
           <div key={id} className="bg-white border p-4 rounded my-3">
-            <div className="flex justify-between items-center">
-              <CustomButton
+            <div className="flex justify-between">
+            <div>
+              <p className="text-base font-medium text-[#0D101B]">{ele.name}</p>
+              <p className="text-letters text-xs">
+                {`${ele.vehicles.length} car${
+                  ele.vehicles.length > 1 ? 's' : ''
+                } selected`}
+              </p>
+
+            </div>
+              {/* <CustomButton
                 title={ele.name}
                 onClick={() =>
                   router.push(
@@ -74,32 +83,28 @@ export const CollectionCard = ({ filteredData }) => {
                     dispatch(getCollectionDetail(ele)),
                   )
                 }
-              />
-              <h3 className="text-letters uppercase">
-                {`${ele.owner.info[0]?.firstName || ''} 
-                  ${ele.owner.info[0]?.lastName || ''}`}
-              </h3>
-            </div>
-            <div className="flex justify-between mt-1 items-center">
-              <p className="text-letters text-xs">
-                {`${ele.vehicles.length} car${
-                  ele.vehicles.length > 1 ? 's' : ''
-                } selected`}
-              </p>
+              /> */}
               <div>
-                <p className="text-letters text-xs">$1,000 deposit paid</p>
-                <p className=" text-xs mt-2">
-                {new Date(ele.createdAt).toLocaleDateString("en-NG",
-                    {
-                        year: "numeric",
-                        day: "numeric",
-                        month: "long",
-                    }
-                )}</p>
+                {/* <h3 className="text-letters uppercase">
+                  {`${ele.owner.info[0]?.firstName || ''} 
+                    ${ele.owner.info[0]?.lastName || ''}`}
+                </h3> */}
+                <div>
+                  <p className="text-[#0D101B] text-base font-medium">$15,000 - $30,500</p>
+                  <p className="text-letters text-xs">$1,000 deposit paid</p>
+                  {/* <p className=" text-xs mt-2">
+                  {new Date(ele.createdAt).toLocaleDateString("en-NG",
+                      {
+                          year: "numeric",
+                          day: "numeric",
+                          month: "long",
+                      }
+                  )}</p> */}
 
+                </div>
               </div>
 
-            </div>
+              </div>
             {displaySmall(ele)}
           </div>
         ))}

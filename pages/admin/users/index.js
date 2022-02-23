@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import ReactPaginate from 'react-paginate'
-import { enviroment } from "../../src/components/environment"
-import UsersTable from "../../src/components/tables/user-table"
+import { enviroment } from "../../../src/components/environment"
+import UsersTable from "../../../src/components/tables/user-table"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ClipLoader} from "react-spinners";

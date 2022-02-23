@@ -3,8 +3,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { enviroment } from '../environment'
 import { ClipLoader} from "react-spinners";
+import { useRouter } from 'next/router';
+import Link from 'next/link'
 
 function UsersTable({users}) {
+    const router = useRouter();
+
     const [confirmModal, setconfirmModal] = useState(false)
     const [confirmBlockModal, setconfirmBlockModal] = useState(false)
     const [makeAdminUserId, setmakeAdminUserId] = useState(null)
@@ -116,7 +120,7 @@ function UsersTable({users}) {
             </thead>
             <tbody>
               {users?.data.docs.map((user) => (
-                <tr key={user?._id} className="cursor-pointer">
+                <tr key={user?._id} onClick={() => router.push('/admin/users/' + user?._id)}>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                     {user?.profile?.firstName || "N/A"} {user?.profile?.lastName}
                   </td>
@@ -133,7 +137,10 @@ function UsersTable({users}) {
                     {dateFormatter(user?.createdAt)}
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1">Edit</button>
+                    <p  className="text-blue-600">
+                      <Link href={"/admin/users/" + user?._id}>View Details</Link>
+                    </p>
+                    {/* <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1">Edit</button>
                     {!user?.isAdmin && (
                       <button onClick={() => confirmFunction(user?._id)} className="py-1 px-4 text-xs rounded-md bg-green-500 text-white mr-1">Make Admin</button>
                     )}
@@ -142,7 +149,7 @@ function UsersTable({users}) {
                     ) : (
 
                     <button onClick={() => confirmBlockFunction(user?._id)} className="py-1 px-4 text-xs rounded-md bg-yellow-500 text-white mr-1">Block</button>
-                    )}
+                    )} */}
                   </td>
                 </tr>
 

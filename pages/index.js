@@ -5,6 +5,40 @@ import { enviroment } from "../src/components/environment";
 import TransactionTable from "../src/components/tables/transaction-table"
 import ReactPaginate from 'react-paginate'
 import { ClipLoader} from "react-spinners";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    
+    // title: {
+    //   display: true,
+    //   text: 'Users',
+    // },
+  },
+};
+
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
 function HomePage() {
   const [transactions, settransactions] = useState(null);
@@ -17,6 +51,18 @@ function HomePage() {
   //Pagination
   const [pageCount, setpageCount] = useState(0)
   const [totalPage, settotalPage] = useState(0)
+
+  const [transactionData, settransactionData] = useState({
+    labels,
+    datasets: [
+      {
+        label: 'Transactions',
+        data: [1,2,3,4,5,6,7],
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  });
 
   useEffect(() => {
     getTransactions()
@@ -144,6 +190,10 @@ const getSearches = () => {
       ) : (
         <>
         <div className="trasactions">
+          <div className="w-1/2 mb-12 text-black">
+            <Line options={options} data={transactionData} />
+
+          </div>
           <p className="uppercase text-base mb-2 font-semibold">All Transactions</p>
           {isPaginationLoading ? (
 

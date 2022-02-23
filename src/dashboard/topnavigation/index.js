@@ -16,7 +16,12 @@ export default function TopNavigation({ authScreen }) {
   useEffect(() => {
     const item = JSON.parse(localStorage.getItem('user'))
     const newSearchValue = localStorage.getItem('searchValue')
-    setsearchValue(newSearchValue)
+    if(!newSearchValue) {
+      setsearchValue("")
+    } else {
+      
+      setsearchValue(newSearchValue)
+    }
 
     console.log(item);
     settoken(item?.userToken)
