@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate'
 import { enviroment } from "../../../src/components/environment"
 import UsersTable from "../../../src/components/tables/user-table"
 import { ClipLoader} from "react-spinners";
+import Link from 'next/link'
 
 
 function Users() {
@@ -150,9 +151,9 @@ function Users() {
                       {/* {dateFormatter(user?.createdAt)} */}N/A
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                      <button className="py-1 px-4 text-xs rounded-md bg-blue-500 text-white mr-1">Edit</button>
-                      <button className="py-1 px-4 text-xs rounded-md bg-green-500 text-white mr-1">Make Admin</button>
-                      <button className="py-1 px-4 text-xs rounded-md bg-yellow-500 text-white mr-1">Block</button>
+                      <p  className="text-blue-600">
+                        <Link href={"/admin/users/" + user?._id}>View Details</Link>
+                      </p>
                     </td>
                   </tr>
 
